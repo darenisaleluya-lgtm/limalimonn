@@ -1,0 +1,2604 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#031a26" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="description" content="Encuentro Zonal de Semilleros de Investigación - Zona Caribe" />
+  <title>Zona Caribe · Encuentro de Semilleros</title>
+  <!-- Hotfix V14: horario Food Gourmet + renovación de caché -->
+<link rel="preload" href="./assets/hero-campus.webp?v=9" as="image" type="image/webp" fetchpriority="high" />
+<link rel="preload" href="./assets/evento-titulo.png" as="image" type="image/png" fetchpriority="high" />
+  <link rel="stylesheet" href="./css/menu.css?v=9" />
+  <link rel="stylesheet" href="./css/agenda.css?v=11" />
+  <link rel="stylesheet" href="./css/servicios.css?v=9" />
+  <link rel="stylesheet" href="./css/evaluador.css?v=12" />
+  <script src="./js/menu.js?v=13" defer></script>
+  <script src="./js/agenda-data.js?v=11" defer></script>
+  <script src="./js/agenda.js?v=11" defer></script>
+  <script src="./js/evaluador-data.js?v=12" defer></script>
+  <script src="./js/evaluador.js?v=12" defer></script>
+
+  <style>
+    :root{
+      --text:#fff;
+      --muted:rgba(255,255,255,.70);
+      --accent:#76d8ef;
+      --accent-2:#2aa9d7;
+      --deep:#031a26;
+
+      /* Paleta tomada de la identidad visual del encuentro */
+      --event-blue:#1677c4;
+      --event-green:#28a10f;
+      --event-orange:#d2510e;
+      --event-magenta:#b81180;
+
+      /* Se actualiza por JS para responder bien a barras móviles */
+      --vh:1vh;
+      --hero-focus-x:57%;
+      --hero-focus-y:48%;
+      --mobile-image-height:191.304%;
+      --mobile-image-left:-62.189%;
+      --mobile-image-top:-37.643%;
+      --safe-top:env(safe-area-inset-top,0px);
+      --safe-bottom:env(safe-area-inset-bottom,0px);
+      --safe-left:env(safe-area-inset-left,0px);
+      --safe-right:env(safe-area-inset-right,0px);
+    }
+
+    *{box-sizing:border-box}
+
+    html,body{
+      margin:0;
+      min-height:100%;
+      background:#071018;
+      font-family:Arial,Helvetica,sans-serif;
+      -webkit-text-size-adjust:100%;
+      text-size-adjust:100%;
+    }
+
+    body{
+      overflow:hidden;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    .app-shell{
+      width:100%;
+      min-height:100svh;
+    }
+
+    .hero{
+      position:relative;
+      width:100%;
+      min-height:100svh;
+      height:calc(var(--vh, 1vh) * 100);
+      max-height:100dvh;
+      overflow:hidden;
+      background:#0b1620;
+      isolation:isolate;
+    }
+
+    /*
+      FOTO DE FONDO RESPONSIVE
+      ------------------------
+      En móvil vertical replica el encuadre indicado de 402 x 874:
+      1048 x 887, left:-409px, top:0.
+      En tablet/escritorio deja de forzar ese zoom y pasa a cover para revelar
+      más fotografía sin deformarla ni perder el punto de interés.
+    */
+    .hero__image{
+      position:absolute;
+      inset:0;
+      z-index:-10;
+      width:100%;
+      height:100%;
+      max-width:none;
+      object-fit:cover;
+      object-position:var(--hero-focus-x) var(--hero-focus-y);
+      transform:none;
+      user-select:none;
+      pointer-events:none;
+    }
+
+    @media (max-width:649px) and (orientation:portrait){
+      .hero__image{
+        inset:auto;
+        top:var(--mobile-image-top);
+        left:var(--mobile-image-left);
+        width:auto;
+        height:var(--mobile-image-height);
+        max-width:none;
+        object-fit:fill;
+        object-position:left top;
+        transform:none;
+        transform-origin:0 0;
+      }
+    }
+
+    .hero__shade{
+      position:absolute;
+      inset:0;
+      z-index:-9;
+      pointer-events:none;
+      background:
+        linear-gradient(
+          180deg,
+          rgba(2,9,15,.02) 0%,
+          rgba(2,9,15,0) 42%,
+          rgba(2,9,15,.08) 57%,
+          rgba(2,9,15,.44) 73%,
+          rgba(2,9,15,.76) 88%,
+          rgba(2,9,15,.94) 100%
+        );
+    }
+
+    .hero__ambient{
+      position:absolute;
+      inset:0;
+      z-index:-8;
+      pointer-events:none;
+      background:
+        radial-gradient(58% 30% at 50% 108%, rgba(0,114,167,.32), transparent 72%),
+        radial-gradient(34% 20% at 8% 74%, rgba(57,215,235,.10), transparent 76%),
+        radial-gradient(30% 18% at 94% 72%, rgba(57,215,235,.08), transparent 78%);
+      box-shadow:
+        inset 0 0 110px rgba(0,0,0,.18),
+        inset 0 -110px 120px rgba(0,18,42,.18);
+      animation:ambientBreath 8s ease-in-out infinite alternate;
+    }
+
+    .hero__glow{
+      position:absolute;
+      left:7%;
+      right:7%;
+      bottom:9%;
+      height:120px;
+      z-index:-7;
+      pointer-events:none;
+      border-radius:50%;
+      background:
+        radial-gradient(ellipse at center,rgba(30,174,226,.18) 0%, rgba(30,174,226,.06) 44%, transparent 74%);
+      filter:blur(24px);
+      animation:glowBreath 5.8s ease-in-out infinite alternate;
+    }
+
+    .hero__light-rings,
+    .hero__particles,
+    .hero__orbs,
+    .hero__dust{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      overflow:hidden;
+    }
+
+    .hero__light-rings{ z-index:-6; }
+    .hero__particles{ z-index:-5; }
+    .hero__orbs{ z-index:-4; }
+    .hero__dust{ z-index:-3; }
+
+    .hero__light-rings span{
+      position:absolute;
+      display:block;
+      border-radius:999px;
+      border:1px solid rgba(118,216,239,.18);
+      filter:blur(.2px);
+      opacity:.55;
+      animation:ringFloat 9s ease-in-out infinite;
+    }
+
+    .hero__light-rings span:nth-child(1){left:6%; bottom:12%; width:48px; height:48px; animation-delay:0s;}
+    .hero__light-rings span:nth-child(2){left:18%; bottom:9%; width:24px; height:24px; animation-delay:1.5s;}
+    .hero__light-rings span:nth-child(3){left:30%; bottom:15%; width:36px; height:36px; animation-delay:3s;}
+    .hero__light-rings span:nth-child(4){left:48%; bottom:8%; width:58px; height:58px; animation-delay:2.2s;}
+    .hero__light-rings span:nth-child(5){left:70%; bottom:13%; width:30px; height:30px; animation-delay:4.1s;}
+    .hero__light-rings span:nth-child(6){left:84%; bottom:10%; width:42px; height:42px; animation-delay:5.2s;}
+
+    .hero__particles span,
+    .hero__dust span{
+      position:absolute;
+      display:block;
+      border-radius:50%;
+      opacity:0;
+    }
+
+    .hero__particles span{
+      width:4px;
+      height:4px;
+      background:rgba(118,216,239,.82);
+      box-shadow:0 0 10px rgba(118,216,239,.35);
+      animation:floatParticle 11s linear infinite;
+    }
+
+    .hero__particles span:nth-child(1){left:8%; bottom:12%; animation-delay:0s}
+    .hero__particles span:nth-child(2){left:15%; bottom:7%; width:3px;height:3px; animation-delay:1.3s}
+    .hero__particles span:nth-child(3){left:23%; bottom:14%; width:5px;height:5px; animation-delay:4.4s}
+    .hero__particles span:nth-child(4){left:31%; bottom:10%; animation-delay:2.1s}
+    .hero__particles span:nth-child(5){left:40%; bottom:18%; width:3px;height:3px; animation-delay:6s}
+    .hero__particles span:nth-child(6){left:49%; bottom:8%; width:5px;height:5px; animation-delay:3.3s}
+    .hero__particles span:nth-child(7){left:58%; bottom:14%; animation-delay:7.4s}
+    .hero__particles span:nth-child(8){left:67%; bottom:9%; width:3px;height:3px; animation-delay:5.1s}
+    .hero__particles span:nth-child(9){left:75%; bottom:16%; width:5px;height:5px; animation-delay:8.2s}
+    .hero__particles span:nth-child(10){left:83%; bottom:8%; animation-delay:1.8s}
+    .hero__particles span:nth-child(11){left:90%; bottom:13%; width:3px;height:3px; animation-delay:6.3s}
+    .hero__particles span:nth-child(12){left:95%; bottom:7%; animation-delay:9.1s}
+
+    .hero__orbs span{
+      position:absolute;
+      display:block;
+      width:26px;
+      height:26px;
+      border-radius:50%;
+      background:radial-gradient(circle at 35% 35%, rgba(188,245,255,.55), rgba(80,183,231,.12) 45%, rgba(80,183,231,0) 72%);
+      filter:blur(4px);
+      mix-blend-mode:screen;
+      opacity:.38;
+      animation:orbDrift 12s ease-in-out infinite;
+    }
+
+    .hero__orbs span:nth-child(1){left:4%; bottom:6%; animation-delay:0s}
+    .hero__orbs span:nth-child(2){left:26%; bottom:5%; width:18px; height:18px; animation-delay:2.1s}
+    .hero__orbs span:nth-child(3){left:46%; bottom:3%; width:34px; height:34px; animation-delay:3.8s}
+    .hero__orbs span:nth-child(4){left:66%; bottom:6%; width:20px; height:20px; animation-delay:5s}
+    .hero__orbs span:nth-child(5){left:84%; bottom:4%; width:30px; height:30px; animation-delay:1.1s}
+
+    .hero__dust span{
+      width:2px;
+      height:2px;
+      background:rgba(255,255,255,.72);
+      box-shadow:0 0 7px rgba(255,255,255,.35);
+      animation:dustRise 14s linear infinite;
+    }
+
+    .hero__dust span:nth-child(1){left:12%; bottom:4%; animation-delay:-1s}
+    .hero__dust span:nth-child(2){left:21%; bottom:2%; animation-delay:-5s}
+    .hero__dust span:nth-child(3){left:34%; bottom:6%; animation-delay:-7s}
+    .hero__dust span:nth-child(4){left:43%; bottom:3%; animation-delay:-3s}
+    .hero__dust span:nth-child(5){left:55%; bottom:5%; animation-delay:-9s}
+    .hero__dust span:nth-child(6){left:64%; bottom:2%; animation-delay:-2s}
+    .hero__dust span:nth-child(7){left:73%; bottom:4%; animation-delay:-10s}
+    .hero__dust span:nth-child(8){left:87%; bottom:6%; animation-delay:-4s}
+
+    /*
+      Campo de destellos de cuatro colores.
+      Inspirado en la lógica del código de referencia: muchos elementos pequeños,
+      delays distintos, transformaciones y luz difusa; todo nace en la zona inferior.
+    */
+    .hero__color-field{
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:0;
+      z-index:2;
+      height:42%;
+      overflow:hidden;
+      pointer-events:none;
+      -webkit-mask-image:linear-gradient(to top,#000 0%,#000 62%,transparent 100%);
+      mask-image:linear-gradient(to top,#000 0%,#000 62%,transparent 100%);
+    }
+
+    .hero__color-field::before{
+      content:"";
+      position:absolute;
+      left:-12%;
+      right:-12%;
+      bottom:-14%;
+      height:58%;
+      background:
+        radial-gradient(28% 78% at 14% 100%,rgba(22,119,196,.23),transparent 74%),
+        radial-gradient(28% 78% at 38% 100%,rgba(40,161,15,.16),transparent 74%),
+        radial-gradient(28% 78% at 64% 100%,rgba(210,81,14,.18),transparent 74%),
+        radial-gradient(28% 78% at 88% 100%,rgba(184,17,128,.21),transparent 74%);
+      filter:blur(24px);
+      animation:colorAura 7s ease-in-out infinite alternate;
+    }
+
+    .color-particle{
+      --x:50%;
+      --size:4px;
+      --rise:160px;
+      --drift:18px;
+      --dur:8s;
+      --delay:0s;
+      --color:var(--event-blue);
+      position:absolute;
+      left:var(--x);
+      bottom:-16px;
+      width:var(--size);
+      height:var(--size);
+      border-radius:50%;
+      background:var(--color);
+      box-shadow:
+        0 0 calc(var(--size) * 2.2) color-mix(in srgb,var(--color) 75%,transparent),
+        0 0 calc(var(--size) * 5) color-mix(in srgb,var(--color) 34%,transparent);
+      opacity:0;
+      will-change:transform,opacity;
+      animation:colorParticleRise var(--dur) cubic-bezier(.24,.64,.36,1) var(--delay) infinite;
+    }
+
+    @supports not (color:color-mix(in srgb,red,blue)){
+      .color-particle{box-shadow:0 0 10px rgba(118,216,239,.35)}
+    }
+
+    .color-orb{
+      --x:50%;
+      --size:22px;
+      --dur:10s;
+      --delay:0s;
+      --color:var(--event-blue);
+      position:absolute;
+      left:var(--x);
+      bottom:2%;
+      width:var(--size);
+      height:var(--size);
+      border-radius:50%;
+      background:radial-gradient(circle at 36% 35%,rgba(255,255,255,.72),var(--color) 25%,transparent 73%);
+      filter:blur(3.4px);
+      mix-blend-mode:screen;
+      opacity:0;
+      will-change:transform,opacity;
+      animation:colorOrbFloat var(--dur) ease-in-out var(--delay) infinite;
+    }
+
+    .color-thread{
+      --x:50%;
+      --h:80px;
+      --dur:8s;
+      --delay:0s;
+      --color:var(--event-blue);
+      position:absolute;
+      left:var(--x);
+      bottom:-32px;
+      width:1.5px;
+      height:var(--h);
+      border-radius:99px;
+      background:linear-gradient(to top,transparent,var(--color),transparent);
+      box-shadow:0 0 10px color-mix(in srgb,var(--color) 32%,transparent);
+      opacity:0;
+      animation:colorThreadRise var(--dur) linear var(--delay) infinite;
+      will-change:transform,opacity;
+    }
+
+    .hero__menu{
+      position:absolute;
+      top:max(21px,calc(var(--safe-top) + 8px));
+      left:max(20px,calc(var(--safe-left) + 16px));
+      z-index:20;
+      width:46px;
+      height:42px;
+      padding:5px 3px;
+      border:0;
+      background:transparent;
+      cursor:pointer;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:7px;
+      -webkit-tap-highlight-color:transparent;
+      animation:menuReveal .8s cubic-bezier(.16,1,.3,1) .12s both;
+    }
+
+    .hero__menu span{
+      display:block;
+      width:38px;
+      height:4px;
+      border-radius:99px;
+      background:linear-gradient(90deg,#7fc7df,#b5edf6);
+      border:1px solid rgba(0,0,0,.78);
+      box-shadow:0 2px 9px rgba(0,0,0,.20),0 0 10px rgba(118,216,239,.10);
+    }
+
+    .hero__branding{
+      position:absolute;
+      top:max(20px,calc(var(--safe-top) + 8px));
+      right:max(18px,calc(var(--safe-right) + 14px));
+      z-index:10;
+      width:min(38vw,178px);
+      margin:0;
+      animation:brandReveal .95s cubic-bezier(.16,1,.3,1) .08s both;
+    }
+
+    .hero__branding-shell{
+      width:100%;
+      padding:7px 8px;
+      border-radius:16px;
+      background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(255,255,255,.80));
+      border:1px solid rgba(255,255,255,.58);
+      box-shadow:
+        0 13px 32px rgba(0,0,0,.18),
+        inset 0 1px 0 rgba(255,255,255,.80);
+      backdrop-filter:none;
+      -webkit-backdrop-filter:none;
+    }
+
+    .hero__event-mark{
+      display:block;
+      width:100%;
+      height:auto;
+      object-fit:contain;
+    }
+
+    .hero__content{
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:max(25px,calc(var(--safe-bottom) + 18px));
+      z-index:5;
+      width:100%;
+      padding:0 clamp(23px,6vw,48px);
+    }
+
+    .hero__copy-card{
+      position:relative;
+      width:min(100%,560px);
+      margin:0 auto;
+      opacity:0;
+      transform:translateY(22px);
+      animation:reveal 1s cubic-bezier(.16,1,.3,1) .18s forwards;
+    }
+
+    .hero__copy-card::before{
+      content:"";
+      position:absolute;
+      inset:-18px -16px -18px;
+      z-index:-1;
+      border-radius:34px;
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.018),rgba(255,255,255,0)),
+        radial-gradient(90% 80% at 50% 100%,rgba(1,39,83,.22),transparent 72%);
+      filter:blur(12px);
+      pointer-events:none;
+    }
+
+    .hero__phrase{
+      position:relative;
+      margin:0 0 20px;
+      color:#fff;
+      font-family:"Noteworthy","Segoe Print","Bradley Hand","Trebuchet MS",sans-serif;
+      font-size:clamp(1.55rem,5.8vw,2.55rem);
+      font-weight:600;
+      font-style:normal;
+      line-height:1.16;
+      letter-spacing:.005em;
+      text-wrap:balance;
+      text-shadow:
+        0 4px 18px rgba(0,0,0,.58),
+        0 10px 32px rgba(0,0,0,.20);
+    }
+
+    .hero__phrase::after{
+      content:"";
+      display:block;
+      width:48px;
+      height:2px;
+      margin-top:14px;
+      border-radius:99px;
+      background:linear-gradient(90deg,var(--accent),rgba(118,216,239,0));
+      box-shadow:0 0 10px rgba(118,216,239,.16);
+    }
+
+    .countdown{
+      position:relative;
+      width:100%;
+      color:#fff;
+      padding:13px 0 0;
+    }
+
+    .countdown::after{
+      content:"";
+      position:absolute;
+      left:10%;
+      right:10%;
+      bottom:-9px;
+      height:18px;
+      border-radius:50%;
+      background:radial-gradient(ellipse at center,rgba(46,186,231,.16),transparent 70%);
+      filter:blur(13px);
+      pointer-events:none;
+    }
+
+    .countdown__eyebrow{
+      margin:0 0 4px;
+      font-size:.63rem;
+      font-weight:800;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.84);
+    }
+
+    .countdown__intro{
+      margin:0 0 11px;
+      color:rgba(255,255,255,.76);
+      font-size:.72rem;
+    }
+
+    .countdown__grid{
+      display:grid;
+      grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;
+      align-items:start;
+      padding:14px 0 2px;
+      border-top:1px solid rgba(255,255,255,.25);
+      position:relative;
+    }
+
+    .countdown__grid::before{
+      content:"";
+      position:absolute;
+      top:-1px;
+      left:0;
+      width:34%;
+      height:1px;
+      background:linear-gradient(90deg,var(--accent),transparent);
+      box-shadow:0 0 8px rgba(118,216,239,.20);
+    }
+
+    .countdown__item{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      min-width:0;
+    }
+
+    .countdown__value{
+      color:#fff;
+      font-size:clamp(1.8rem,7.7vw,2.7rem);
+      font-weight:300;
+      line-height:1;
+      letter-spacing:-.055em;
+      font-variant-numeric:tabular-nums;
+      text-shadow:0 3px 12px rgba(0,0,0,.30);
+      transition:transform .18s ease,text-shadow .18s ease;
+    }
+
+    .countdown__value.tick{
+      transform:translateY(-2px) scale(1.035);
+      text-shadow:0 0 16px rgba(118,216,239,.22),0 3px 12px rgba(0,0,0,.30);
+    }
+
+    .countdown__label{
+      margin-top:7px;
+      color:rgba(255,255,255,.66);
+      font-size:.55rem;
+      font-weight:700;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+    }
+
+    .countdown__separator{
+      padding-top:2px;
+      color:var(--accent);
+      font-size:1.35rem;
+      opacity:.88;
+      text-shadow:0 0 10px rgba(118,216,239,.20);
+      animation:separatorPulse 2.4s ease-in-out infinite;
+    }
+
+    .countdown__meta,
+    .countdown__status{
+      margin:8px 0 0;
+      min-height:1em;
+      color:rgba(255,255,255,.64);
+      font-size:.62rem;
+    }
+
+    .countdown__status{ color:#dffcff; }
+
+    @keyframes reveal{
+      to{opacity:1;transform:translateY(0)}
+    }
+
+    @keyframes brandReveal{
+      from{opacity:0;transform:translateY(-12px) scale(.97)}
+      to{opacity:1;transform:translateY(0) scale(1)}
+    }
+
+    @keyframes menuReveal{
+      from{opacity:0;transform:translateX(-10px)}
+      to{opacity:1;transform:translateX(0)}
+    }
+
+    @keyframes ambientBreath{
+      0%{opacity:.78;transform:scale(1)}
+      100%{opacity:1;transform:scale(1.025)}
+    }
+
+    @keyframes glowBreath{
+      0%{opacity:.42;transform:scaleX(.92)}
+      100%{opacity:.78;transform:scaleX(1.05)}
+    }
+
+    @keyframes ringFloat{
+      0%,100%{transform:translateY(0) scale(.9); opacity:.16}
+      50%{transform:translateY(-10px) scale(1.04); opacity:.45}
+    }
+
+    @keyframes floatParticle{
+      0%{opacity:0;transform:translate3d(0,0,0) scale(.85)}
+      14%{opacity:.42}
+      100%{opacity:0;transform:translate3d(-8px,-120px,0) scale(1.16)}
+    }
+
+    @keyframes orbDrift{
+      0%,100%{transform:translate3d(0,0,0) scale(.9); opacity:.18}
+      50%{transform:translate3d(-10px,-18px,0) scale(1.08); opacity:.48}
+    }
+
+    @keyframes dustRise{
+      0%{opacity:0;transform:translate3d(0,0,0)}
+      12%{opacity:.58}
+      100%{opacity:0;transform:translate3d(4px,-90px,0)}
+    }
+
+    @keyframes separatorPulse{
+      0%,100%{opacity:.48}
+      50%{opacity:.95}
+    }
+
+    @keyframes colorAura{
+      0%{transform:translate3d(-1.5%,5px,0) scale(.98);opacity:.70}
+      100%{transform:translate3d(1.5%,-6px,0) scale(1.035);opacity:1}
+    }
+
+    @keyframes colorParticleRise{
+      0%{opacity:0;transform:translate3d(0,20px,0) scale(.55)}
+      11%{opacity:.92}
+      40%{opacity:.75;transform:translate3d(calc(var(--drift) * .38),calc(var(--rise) * -.42),0) scale(1)}
+      72%{opacity:.46;transform:translate3d(calc(var(--drift) * -.28),calc(var(--rise) * -.76),0) scale(.9)}
+      100%{opacity:0;transform:translate3d(var(--drift),calc(var(--rise) * -1),0) scale(.42)}
+    }
+
+    @keyframes colorOrbFloat{
+      0%{opacity:0;transform:translate3d(0,18px,0) scale(.72)}
+      18%{opacity:.42}
+      52%{opacity:.58;transform:translate3d(-10px,-62px,0) scale(1.04)}
+      100%{opacity:0;transform:translate3d(12px,-128px,0) scale(.76)}
+    }
+
+    @keyframes colorThreadRise{
+      0%{opacity:0;transform:translate3d(0,18px,0) scaleY(.78)}
+      18%{opacity:.45}
+      74%{opacity:.30}
+      100%{opacity:0;transform:translate3d(0,-175px,0) scaleY(1.20)}
+    }
+
+    @media (min-width:700px){
+      :root{--hero-focus-x:30%;--hero-focus-y:49.3%;}
+      .hero__content{padding-left:clamp(32px,7vw,88px);padding-right:clamp(32px,7vw,88px)}
+    }
+
+    @media (min-width:1100px){
+      :root{--hero-focus-x:58.2%;--hero-focus-y:49.5%;}
+      .hero__branding{width:min(20vw,220px)}
+      .hero__content{max-width:760px;margin-left:auto;margin-right:auto}
+    }
+
+    @media (min-aspect-ratio:16/10) and (min-width:900px){
+      :root{--hero-focus-x:58.2%;--hero-focus-y:49.5%;}
+    }
+
+    @media (max-width:480px){
+      .hero__branding{
+        width:148px;
+        top:max(14px,calc(var(--safe-top) + 5px));
+        right:max(14px,calc(var(--safe-right) + 10px));
+      }
+
+      .hero__branding-shell{padding:6px; border-radius:13px;}
+
+      .hero__content{
+        padding-left:max(22px,calc(var(--safe-left) + 18px));
+        padding-right:max(22px,calc(var(--safe-right) + 18px));
+      }
+
+      .hero__phrase{ max-width:350px; }
+    }
+
+    @media (max-width:370px){
+      .hero__branding{width:132px}
+      .countdown__value{font-size:1.7rem}
+      .countdown__separator{font-size:1.15rem}
+    }
+
+    @media (max-height:690px){
+      .hero__content{bottom:max(18px,calc(var(--safe-bottom) + 12px))}
+      .hero__phrase{margin-bottom:12px;font-size:1.55rem}
+      .countdown__grid{padding-top:10px}
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *,*::before,*::after{
+        animation-duration:.001ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.001ms!important;
+      }
+    }
+
+
+    /* ==========================================================
+       RENDIMIENTO: solo anima lo que el usuario está viendo.
+       ========================================================== */
+    html.is-page-hidden *,
+    html.is-page-hidden *::before,
+    html.is-page-hidden *::after{animation-play-state:paused!important}
+
+    body.zc-agenda-open .hero__ambient,
+    body.zc-agenda-open .hero__glow,
+    body.zc-agenda-open .hero__light-rings span,
+    body.zc-agenda-open .hero__particles span,
+    body.zc-agenda-open .hero__orbs span,
+    body.zc-agenda-open .hero__dust span,
+    body.zc-agenda-open .color-particle,
+    body.zc-agenda-open .color-orb,
+    body.zc-agenda-open .color-thread,
+    body.zc-services-open .hero__ambient,
+    body.zc-services-open .hero__glow,
+    body.zc-services-open .hero__light-rings span,
+    body.zc-services-open .hero__particles span,
+    body.zc-services-open .hero__orbs span,
+    body.zc-services-open .hero__dust span,
+    body.zc-services-open .color-particle,
+    body.zc-services-open .color-orb,
+    body.zc-services-open .color-thread,
+    body.zc-evaluator-open .hero__ambient,
+    body.zc-evaluator-open .hero__glow,
+    body.zc-evaluator-open .hero__light-rings span,
+    body.zc-evaluator-open .hero__particles span,
+    body.zc-evaluator-open .hero__orbs span,
+    body.zc-evaluator-open .hero__dust span,
+    body.zc-evaluator-open .color-particle,
+    body.zc-evaluator-open .color-orb,
+    body.zc-evaluator-open .color-thread,
+    body.zc-menu-lock .hero__ambient,
+    body.zc-menu-lock .hero__glow,
+    body.zc-menu-lock .hero__light-rings span,
+    body.zc-menu-lock .hero__particles span,
+    body.zc-menu-lock .hero__orbs span,
+    body.zc-menu-lock .hero__dust span,
+    body.zc-menu-lock .color-particle,
+    body.zc-menu-lock .color-orb,
+    body.zc-menu-lock .color-thread{animation-play-state:paused!important}
+
+    .agenda-module,.services-module,.evaluator-module,.zc-menu{contain:layout paint style}
+
+  </style>
+</head>
+<body>
+  <main id="app" class="app-shell">
+    <section id="hero-module" class="hero" aria-labelledby="hero-phrase">
+      <img class="hero__image" src="./assets/hero-campus.webp?v=9" alt="" width="941" height="1672" decoding="async" fetchpriority="high" />
+
+      <div class="hero__shade" aria-hidden="true"></div>
+      <div class="hero__ambient" aria-hidden="true"></div>
+      <div class="hero__glow" aria-hidden="true"></div>
+
+      <div class="hero__light-rings" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+
+      <div class="hero__particles" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+
+      <div class="hero__orbs" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+
+      <div class="hero__dust" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+
+      <div id="hero-color-field" class="hero__color-field" aria-hidden="true"></div>
+
+      <svg id="zc-menu-pull" class="zc-menu-pull" viewBox="0 0 150 1000" preserveAspectRatio="none" aria-hidden="true">
+        <path id="zc-menu-pull-path" d="M0,0 H40 V350 C40,420 40,430 40,500 S40,580 40,650 V1000 H0Z"></path>
+      </svg>
+
+      <button id="zc-menu-trigger" class="zc-menu-trigger" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="zc-menu">
+        <svg class="zc-menu-trigger__ring" viewBox="0 0 56 56" aria-hidden="true">
+          <circle cx="28" cy="28" r="23"></circle>
+        </svg>
+        <span class="zc-menu-trigger__lines" aria-hidden="true">
+          <span class="zc-menu-trigger__line"></span>
+          <span class="zc-menu-trigger__line"></span>
+          <span class="zc-menu-trigger__line"></span>
+        </span>
+      </button>
+
+      <aside id="zc-menu" class="zc-menu" aria-hidden="true" aria-label="Navegación principal">
+        <div class="zc-menu__inner">
+          <p class="zc-menu__eyebrow">Zona Caribe · Encuentro 2026</p>
+          <h2 class="zc-menu__title">Explora el encuentro</h2>
+
+          <nav aria-label="Secciones del encuentro">
+            <ul class="zc-menu__list">
+              <li class="zc-menu__row">
+                <button class="zc-menu__item is-active" type="button" data-menu-target="inicio" style="--item-color:#1677c4">
+                  <span class="zc-menu__number">01</span>
+                  <span class="zc-menu__label">Inicio</span>
+                  <span class="zc-menu__arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+                </button>
+              </li>
+              <li class="zc-menu__row">
+                <button class="zc-menu__item" type="button" data-menu-target="agenda" style="--item-color:#28a10f">
+                  <span class="zc-menu__number">02</span>
+                  <span class="zc-menu__label">Agenda</span>
+                  <span class="zc-menu__arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+                </button>
+              </li>
+              <li class="zc-menu__row">
+                <button class="zc-menu__item" type="button" data-menu-target="servicios" style="--item-color:#d2510e">
+                  <span class="zc-menu__number">03</span>
+                  <span class="zc-menu__label">Servicios</span>
+                  <span class="zc-menu__arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+                </button>
+              </li>
+              <li class="zc-menu__row">
+                <button class="zc-menu__item" type="button" data-menu-target="evaluador" style="--item-color:#b81180">
+                  <span class="zc-menu__number">04</span>
+                  <span class="zc-menu__label">Evaluador</span>
+                  <span class="zc-menu__arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+                </button>
+              </li>
+              <li class="zc-menu__row">
+                <button class="zc-menu__item" type="button" data-menu-target="asistencia" data-external-url="https://docs.google.com/forms/d/e/1FAIpQLSf9VMxVh7zPL8K0TJXdZtKi1kaAm95H1BsBSs06Grt1BrOmBw/viewform" style="--item-color:#168fa5">
+                  <span class="zc-menu__number">05</span>
+                  <span class="zc-menu__label">Asistencia</span>
+                  <span class="zc-menu__arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+                </button>
+              </li>
+            </ul>
+          </nav>
+
+          <footer class="zc-menu__footer">
+            <span class="zc-menu__hint">Desde el CEAD Curumaní, los recibimos con cariño.</span>
+            <span class="zc-menu__mark">UNAD · Zona Caribe</span>
+          </footer>
+        </div>
+      </aside>
+
+      <header class="hero__branding" aria-label="Título del evento">
+        <div class="hero__branding-shell">
+          <img class="hero__event-mark" src="./assets/evento-titulo.png" alt="X Encuentro Zonal de Semilleros de Investigación y IV Encuentro de Investigación, Innovación y Proyección Social" width="680" height="240" />
+        </div>
+      </header>
+
+      <div class="hero__content">
+        <div class="hero__copy-card">
+          <p id="hero-phrase" class="hero__phrase">Desde la Zona Caribe, queremos vivir contigo este gran encuentro.</p>
+
+          <div class="countdown" aria-label="Cuenta regresiva para el inicio del encuentro">
+            <p class="countdown__eyebrow">Cuenta regresiva</p>
+            <p class="countdown__intro">Falta poco para encontrarnos</p>
+
+            <div class="countdown__grid" role="timer" aria-live="off">
+              <div class="countdown__item">
+                <strong id="countdown-days" class="countdown__value">00</strong>
+                <span class="countdown__label">días</span>
+              </div>
+              <span class="countdown__separator" aria-hidden="true">:</span>
+              <div class="countdown__item">
+                <strong id="countdown-hours" class="countdown__value">00</strong>
+                <span class="countdown__label">horas</span>
+              </div>
+              <span class="countdown__separator" aria-hidden="true">:</span>
+              <div class="countdown__item">
+                <strong id="countdown-minutes" class="countdown__value">00</strong>
+                <span class="countdown__label">min</span>
+              </div>
+              <span class="countdown__separator countdown__separator--seconds" aria-hidden="true">:</span>
+              <div class="countdown__item countdown__item--seconds">
+                <strong id="countdown-seconds" class="countdown__value">00</strong>
+                <span class="countdown__label">seg</span>
+              </div>
+            </div>
+
+            <p class="countdown__meta"><span id="countdown-date-label"></span></p>
+            <p id="countdown-status" class="countdown__status"></p>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ======================================================
+           MODULO AGENDA VIVA
+           Su contenido se genera desde ./js/agenda-data.js?v=11
+           ====================================================== -->
+      <section id="agenda-module" class="agenda-module" aria-hidden="true" aria-labelledby="agenda-title">
+        <svg class="agenda__motion" viewBox="0 0 100 1000" preserveAspectRatio="none" aria-hidden="true">
+          <path id="agenda-motion-line" d="M23 0 V330 C23 400 23 430 23 500 S23 600 23 670 V1000"></path>
+        </svg>
+
+        <div id="agenda-scroll" class="agenda__scroll" tabindex="-1">
+          <div class="agenda__inner">
+            <header class="agenda__header">
+              <div>
+                <p class="agenda__eyebrow">CIP Curumaní · Encuentro 2026</p>
+                <h2 id="agenda-title" class="agenda__title">Agenda viva</h2>
+              </div>
+
+              <button id="agenda-close" class="agenda__close" type="button" aria-label="Volver al inicio">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+              </button>
+            </header>
+
+            <section class="agenda__spotlight" aria-live="polite" aria-label="Actividad destacada">
+              <div id="agenda-orbit" class="agenda__orbit">
+                <span class="agenda__orbit-text">
+                  <strong id="agenda-orbit-day" class="agenda__orbit-day">01</strong>
+                  <span id="agenda-orbit-month" class="agenda__orbit-month">OCT</span>
+                </span>
+              </div>
+
+              <div class="agenda__spotlight-copy">
+                <p id="agenda-status-label" class="agenda__status-label">Lo próximo</p>
+                <p id="agenda-status-time" class="agenda__status-time">8:00 a. m. – 8:30 a. m.</p>
+                <h3 id="agenda-status-title" class="agenda__status-title">Registro y acreditación de participantes</h3>
+                <div class="agenda__status-meta">
+                  <span id="agenda-status-room" class="agenda__status-room" hidden></span>
+                  <span id="agenda-status-countdown" class="agenda__status-countdown"></span>
+                </div>
+              </div>
+            </section>
+
+            <div id="agenda-list" class="agenda__list"></div>
+
+            <div id="agenda-empty" class="agenda__empty" aria-live="polite">
+              <div>
+                <div class="agenda__empty-circle" aria-hidden="true">✓</div>
+                <h3>Agenda completada</h3>
+                <p>Las actividades programadas ya finalizaron. Gracias por ser parte del encuentro.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================
+           MODULO SERVICIOS
+           Vista inicial: categorías. Hoteles se abre solo al tocar
+           el botón Hoteles; la ficha aparece al elegir un hotel.
+           ====================================================== -->
+      <section id="servicios-module" class="services-module" aria-hidden="true" aria-labelledby="services-title">
+        <div class="services-module__veil" aria-hidden="true"></div>
+
+        <div class="services-module__shell">
+          <header class="services-module__header">
+            <div>
+              <p class="services-module__eyebrow">CEAD Curumaní · Información práctica</p>
+              <h2 id="services-title" class="services-module__title">Servicios</h2>
+              <p class="services-module__lead">Selecciona la información que necesitas durante tu visita.</p>
+            </div>
+
+            <button id="services-close" class="services-module__close" type="button" aria-label="Cerrar servicios">×</button>
+          </header>
+
+          <section id="services-home" class="services-view services-home" aria-label="Categorías de servicios">
+            <div class="services-category-grid">
+              <button class="services-category" type="button" data-service-category="hoteles" style="--cat:#1677c4">
+                <span class="services-category__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M4 20V8l8-4 8 4v12M8 20v-6h8v6M8 10h.01M12 10h.01M16 10h.01"/></svg>
+                </span>
+                <span class="services-category__title">Hoteles</span>
+                <span class="services-category__hint">7 opciones de alojamiento cercanas</span>
+                <span class="services-category__arrow" aria-hidden="true">→</span>
+              </button>
+
+              <button class="services-category" type="button" data-service-category="restaurantes" style="--cat:#28a10f">
+                <span class="services-category__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M7 3v7M4 3v5a3 3 0 0 0 6 0V3M7 11v10M16 3v18M16 3c3 2 4 5 4 8h-4"/></svg>
+                </span>
+                <span class="services-category__title">Restaurantes</span>
+                <span class="services-category__hint">9 opciones para comer cerca del encuentro</span>
+                <span class="services-category__arrow" aria-hidden="true">→</span>
+              </button>
+
+              <button class="services-category" type="button" data-service-category="transporte" style="--cat:#d2510e">
+                <span class="services-category__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><circle cx="6.5" cy="17" r="3"/><circle cx="17.5" cy="17" r="3"/><path d="M9.3 17h5.2l-2.2-5.2H9.2l-2.1 2.4M12.3 11.8l2.2-3.1h2.3M14.7 8.7l1.7 3.1h2.1M8.8 9.2h3.8"/></svg>
+                </span>
+                <span class="services-category__title">Transporte</span>
+                <span class="services-category__hint">Motocarros organizados por turno</span>
+                <span class="services-category__arrow" aria-hidden="true">→</span>
+              </button>
+            </div>
+
+            <div class="services-home__note">
+              La información se presenta como apoyo para los asistentes. Los establecimientos y prestadores son independientes de la organización del encuentro.
+            </div>
+          </section>
+
+          <section id="services-hotels-panel" class="services-view services-subpanel" aria-labelledby="services-hotels-title" hidden>
+            <div class="services-subpanel__bar">
+              <button class="services-back" type="button" data-services-back aria-label="Volver a servicios">←</button>
+              <div class="services-subpanel__heading">
+                <p class="services-subpanel__eyebrow">Hospedaje cercano</p>
+                <h3 id="services-hotels-title" class="services-subpanel__title">Hoteles</h3>
+                <p class="services-subpanel__intro">Elige un hotel para ver su información.</p>
+              </div>
+            </div>
+
+            <div id="services-tabs" class="services-tabs" role="tablist" aria-label="Hoteles sugeridos"></div>
+
+            <article id="hotel-card" class="hotel-card" aria-live="polite" hidden>
+              <figure id="hotel-photo-wrap" class="hotel-card__photo">
+                <img id="hotel-photo" class="hotel-card__image" alt="" loading="eager" decoding="async" fetchpriority="high" />
+                <span class="hotel-card__photo-light" aria-hidden="true"></span>
+                <figcaption id="hotel-photo-index" class="hotel-card__photo-badge">01 · Hotel</figcaption>
+              </figure>
+
+              <div class="hotel-card__content">
+                <h3 id="hotel-name" class="hotel-card__name"></h3>
+
+                <div class="hotel-card__meta">
+                  <div class="hotel-card__meta-block">
+                    <span class="hotel-card__meta-label">Teléfono</span>
+                    <div id="hotel-phones" class="hotel-card__chips"></div>
+                  </div>
+
+                  <div class="hotel-card__meta-block">
+                    <span class="hotel-card__meta-label">Dirección</span>
+                    <div id="hotel-address" class="hotel-address"></div>
+                  </div>
+                </div>
+
+                <aside class="hotel-card__notice" aria-label="Información sobre el alojamiento">
+                  <span class="hotel-card__notice-icon" aria-hidden="true">i</span>
+                  <p>
+                    Estas opciones fueron identificadas por su cercanía al encuentro. Los hoteles son independientes de la organización; la elección, reserva, pagos, atención y condiciones de estadía son responsabilidad del participante y del establecimiento elegido.
+                  </p>
+                </aside>
+              </div>
+            </article>
+          </section>
+
+          <section id="services-restaurants-panel" class="services-view services-subpanel services-restaurants" aria-labelledby="services-restaurants-title" hidden>
+            <div class="services-subpanel__bar">
+              <button class="services-back" type="button" data-services-back aria-label="Volver a servicios">←</button>
+              <div class="services-subpanel__heading">
+                <p class="services-subpanel__eyebrow">Comer en Curumaní</p>
+                <h3 id="services-restaurants-title" class="services-subpanel__title">Restaurantes</h3>
+                <p class="services-subpanel__intro">La selección cambia según la hora. También puedes consultar desayuno, almuerzo o cena.</p>
+              </div>
+            </div>
+
+            <div id="restaurant-now" class="restaurant-now" aria-live="polite"></div>
+            <div id="restaurant-filters" class="restaurant-filters" aria-label="Filtrar restaurantes por momento del día"></div>
+            <div id="restaurant-list" class="restaurant-list" aria-live="polite"></div>
+
+            <section id="restaurant-treats" class="restaurant-treats" aria-labelledby="restaurant-treats-title">
+              <div class="restaurant-treats__head">
+                <span class="restaurant-treats__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M5 11h14v8H5v-8ZM7 11V8h10v3M9 8V5M15 8V5M9 5h.01M15 5h.01"/></svg>
+                </span>
+                <div>
+                  <p class="restaurant-treats__eyebrow">Café · Repostería</p>
+                  <h4 id="restaurant-treats-title" class="restaurant-treats__title">Antojitos</h4>
+                </div>
+              </div>
+              <div id="restaurant-treats-list" class="restaurant-treats__list"></div>
+            </section>
+
+            <div class="services-home__note restaurant-note">
+              Horarios e información suministrados como referencia para los asistentes. Cada restaurante es independiente de la organización del encuentro y puede realizar cambios en su operación.
+            </div>
+          </section>
+
+          <section id="services-transport-panel" class="services-view services-subpanel services-transport" aria-labelledby="services-transport-title" hidden>
+            <div class="services-subpanel__bar">
+              <button class="services-back" type="button" data-services-back aria-label="Volver a servicios">←</button>
+              <div class="services-subpanel__heading">
+                <p class="services-subpanel__eyebrow">Movilidad local</p>
+                <h3 id="services-transport-title" class="services-subpanel__title">Motocarros</h3>
+                <p class="services-subpanel__intro">Contactos organizados automáticamente según el turno disponible.</p>
+              </div>
+            </div>
+
+            <div id="transport-now" class="transport-now" aria-live="polite"></div>
+            <div id="transport-list" class="transport-list" aria-live="polite"></div>
+
+            <div class="transport-footer">
+              <span id="transport-count" class="transport-count"></span>
+              <button id="transport-more" class="transport-more" type="button" hidden>
+                <span>Mostrar más</span>
+              </button>
+            </div>
+
+            <div class="services-home__note transport-note">
+              Directorio de apoyo para los asistentes. La disponibilidad, tarifas, tiempos de llegada y condiciones del servicio dependen directamente de cada conductor.
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <!-- ======================================================
+           MODULO EVALUADOR
+           Consulta privada por código + asignaciones por día.
+           ====================================================== -->
+      <section id="evaluador-module" class="evaluator-module" aria-hidden="true" aria-labelledby="evaluador-title">
+        <div class="evaluator-module__backdrop" aria-hidden="true"></div>
+
+        <div class="evaluator-shell">
+          <header class="evaluator-header">
+            <div>
+              <p class="evaluator-header__eyebrow">Encuentro 2026 · Asignaciones</p>
+              <h2 id="evaluador-title" class="evaluator-header__title">Evaluador</h2>
+              <p class="evaluator-header__lead">Ingresa tu código para consultar las ponencias y proyectos que tienes asignados.</p>
+            </div>
+            <button id="evaluador-close" class="evaluator-close" type="button" aria-label="Cerrar evaluador">×</button>
+          </header>
+
+          <form id="evaluador-form" class="evaluador-search" autocomplete="off">
+            <div class="evaluador-search__field">
+              <label class="evaluador-search__label" for="evaluador-code">Código de evaluador</label>
+              <input id="evaluador-code" class="evaluador-search__input" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="12" placeholder="Ingresa tu código" aria-describedby="evaluador-error" />
+            </div>
+            <button id="evaluador-submit" class="evaluador-search__button" type="submit">
+              <span class="evaluador-search__button-label">Consultar</span>
+            </button>
+            <p id="evaluador-error" class="evaluador-search__error" role="alert" hidden></p>
+          </form>
+
+          <section id="evaluador-results" class="evaluador-results" aria-live="polite" hidden>
+            <div class="evaluador-summary">
+              <div>
+                <h3 id="evaluador-name" class="evaluador-summary__name"></h3>
+                <p id="evaluador-mode" class="evaluador-summary__mode"></p>
+              </div>
+              <button id="evaluador-reset" class="evaluador-reset" type="button">Cambiar código</button>
+            </div>
+            <div id="evaluador-days" class="evaluador-days"></div>
+          </section>
+        </div>
+      </section>
+
+      </section>
+
+    </section>
+  </main>
+
+  <noscript>
+    <div style="padding:20px;background:#fff;color:#000">Esta experiencia necesita JavaScript para mostrar la cuenta regresiva.</div>
+  </noscript>
+
+  <!-- MÓDULO SERVICIOS: datos y lógica embebidos para evitar bloqueo MIME de archivos .txt -->
+  <script>
+/* ============================================================
+   ZONA CARIBE · DATOS DEL MÓDULO HOTELES
+   Archivo entregado como .txt por solicitud del usuario.
+   ============================================================ */
+
+window.ZC_SERVICIOS_CONFIG = {
+  hoteles: [
+    {
+      id: 'dubay',
+      nombre: 'Hotel Dubay',
+      tipo: 'Hotel',
+      telefonos: ['321 777 3572'],
+      direccion: 'Carrera 15 # 8-43',
+      accent: '#1677c4',
+      tint: '22,119,196',
+      foto: './assets/hoteles/dubay.webp?v=9'
+    },
+    {
+      id: 'posada',
+      nombre: 'Hotel La Posada Camino Real',
+      tipo: 'Hotel',
+      telefonos: ['313 574 2529', '310 685 6651'],
+      direccion: 'Diagonal 2 # 17-94',
+      accent: '#28a10f',
+      tint: '40,161,15',
+      foto: './assets/hoteles/posada.webp?v=9'
+    },
+    {
+      id: 'mayumir',
+      nombre: 'Hotel Mayumir',
+      tipo: 'Hotel',
+      telefonos: ['321 421 4307'],
+      direccion: 'Carrera 16 # 7-44',
+      accent: '#b81180',
+      tint: '184,17,128',
+      foto: './assets/hoteles/mayumir.webp?v=9'
+    },
+    {
+      id: 'jahdai',
+      nombre: 'Hotel Jahdai',
+      tipo: 'Hotel',
+      telefonos: ['310 648 9899'],
+      direccion: 'Calle 9a # 15 - 83',
+      accent: '#d2510e',
+      tint: '210,81,14',
+      foto: './assets/hoteles/jahdai.webp?v=9'
+    },
+    {
+      id: 'solymar',
+      nombre: 'Hotel Sol y Mar',
+      tipo: 'Hotel',
+      telefonos: ['321 374 3867'],
+      direccion: 'Calle 10 # 15 - 51',
+      accent: '#1677c4',
+      tint: '22,119,196',
+      foto: './assets/hoteles/solymar.webp?v=9'
+    },
+    {
+      id: 'hawai',
+      nombre: 'Hotel Hawai',
+      tipo: 'Hotel',
+      telefonos: ['320 869 3186'],
+      direccion: 'Calle 9a # 16-17, barrio Paraíso',
+      accent: '#28a10f',
+      tint: '40,161,15',
+      foto: './assets/hoteles/hawai.webp?v=9'
+    },
+    {
+      id: 'central',
+      nombre: 'Hotel Central',
+      tipo: 'Hotel',
+      telefonos: ['(605) 5750249'],
+      direccion: 'Calle 8 # 16-51 · al lado de Crezcamos, sobre la Troncal del Caribe',
+      accent: '#b81180',
+      tint: '184,17,128',
+      foto: './assets/hoteles/central.webp?v=9'
+    }
+  ]
+};
+
+/* ============================================================
+   RESTAURANTES
+   Horarios y servicios cargados con la información suministrada.
+   ============================================================ */
+
+window.ZC_SERVICIOS_CONFIG.restaurantes = [
+  {
+    id: 'mediterraneo',
+    nombre: 'Restaurante Mediterráneo',
+    servicios: ['almuerzo', 'cena'],
+    horario: { abre: '11:00', cierra: '22:00' },
+    direccion: 'Cr 6 # 9 - 50',
+    whatsappUsuario: 'casamediterranea369'
+  },
+  {
+    id: 'los-caciques',
+    nombre: 'Restaurante Los Caciques',
+    servicios: ['desayuno', 'almuerzo', 'cena'],
+    horario: { abre: '06:30', cierra: '22:00' },
+    direccion: '',
+    celular: '317 7835931'
+  },
+  {
+    id: 'bristo',
+    nombre: 'Restaurante Bristo',
+    servicios: ['cena'],
+    horario: { abre: '17:00', cierra: '23:00' },
+    direccion: 'Cr 16 # 12 - 13',
+    celular: '+57 (320) 888-7366'
+  },
+  {
+    id: 'rancho-grill',
+    nombre: 'Rancho Grill',
+    servicios: ['cena'],
+    horario: { abre: '17:00', cierra: '23:00' },
+    direccion: 'Calle 13 # 12-26',
+    celular: '311 4413246'
+  },
+  {
+    id: 'brisas-oriente',
+    nombre: 'Restaurante Brisas del Oriente',
+    servicios: ['desayuno', 'almuerzo', 'cena'],
+    horario: { abre: '08:00', cierra: '22:00' },
+    direccion: 'Salida a Valledupar',
+    celular: '311 4034333'
+  },
+  {
+    id: 'cafe-innato',
+    nombre: 'Café Innato',
+    servicios: ['almuerzo', 'reposteria'],
+    horario: { abre: '08:00', cierra: '22:00' },
+    direccion: 'Calle 7 # 15 - 85'
+  },
+  {
+    id: 'colombianita',
+    nombre: 'Colombianita',
+    servicios: ['desayuno', 'almuerzo', 'reposteria', 'cena'],
+    horario: { abre: '08:00', cierra: '22:00' },
+    direccion: 'Calle 8 # 14 - 69',
+    celular: '311 3508268'
+  },
+  {
+    id: 'campesino',
+    nombre: 'Restaurante Campesino',
+    servicios: ['desayuno', 'almuerzo'],
+    horario: { abre: '08:00', cierra: '14:00' },
+    direccion: 'Calle 8 con Carrera 11',
+    celular: '315 7483839'
+  },
+  {
+    id: 'juan-cafe',
+    nombre: 'Juan Café',
+    servicios: ['cena', 'reposteria'],
+    horario: { abre: '08:00', cierra: '22:00' },
+    direccion: 'Calle 9 con Cr 16 esquina',
+    celular: '304 4251405'
+  },
+  {
+    id: 'food-gourmet',
+    nombre: 'Restaurante Food Gourmet',
+    servicios: ['almuerzo', 'cena'],
+    horario: { abre: '11:30', cierra: '23:00' },
+    direccion: 'Kr 12, Calle 9A # 11 · Barrio El Carmen',
+    celular: '314 855 1641',
+    whatsapp: '314 855 1641'
+  }
+];
+
+
+/* ============================================================
+   TRANSPORTE · MOTOCARROS COOPMOCUR
+   Turno definido según el color del nombre en el listado PDF:
+   negro = día · rojo = noche.
+   ============================================================ */
+
+
+window.ZC_SERVICIOS_CONFIG.motocarroConfig = {
+  zonaHoraria: 'America/Bogota',
+  horaInicioNoche: 19,
+  horaFinNoche: 6,
+  cantidadInicial: 5,
+  cantidadMas: 5
+};
+
+window.ZC_SERVICIOS_CONFIG.motocarros = [
+  { id:'moto-001', interno:'001', nombre:'Ramon David Guerrero Amaya', telefono:'3103541585', turno:'dia' },
+  { id:'moto-002', interno:'002', nombre:'Ramón Flórez Polo', telefono:'3225337973', turno:'dia' },
+  { id:'moto-003', interno:'003', nombre:'Davinsu Ley Montejo Mena', telefono:'3216324204', turno:'dia' },
+  { id:'moto-004', interno:'004', nombre:'Johan Steven Sanchez Caicedo', telefono:'3227329967', turno:'dia' },
+  { id:'moto-005', interno:'005', nombre:'Vicente Rodríguez Pedrozo', telefono:'3114112354', turno:'dia' },
+  { id:'moto-006', interno:'006', nombre:'Diego Andres Carcamo Diaz', telefono:'3226856700', turno:'dia' },
+  { id:'moto-007', interno:'007', nombre:'Delmis José Meriño Capera', telefono:'3114301575', turno:'dia' },
+  { id:'moto-008', interno:'008', nombre:'Cesar Paternina', telefono:'3160888660', turno:'noche' },
+  { id:'moto-009', interno:'008', nombre:'Eder Camargo Guerrero', telefono:'3178766767', turno:'dia' },
+  { id:'moto-010', interno:'009', nombre:'Luis Fernando García Gómez', telefono:'3173451216', turno:'dia' },
+  { id:'moto-011', interno:'010', nombre:'Adel Royero Guillén', telefono:'3126327586', turno:'dia' },
+  { id:'moto-012', interno:'011', nombre:'Yovanny Scarpetta Castillejo', telefono:'3024064417', turno:'dia' },
+  { id:'moto-013', interno:'012', nombre:'Faider Alfonso Chiquillo Machado', telefono:'3117424682', turno:'dia' },
+  { id:'moto-014', interno:'013', nombre:'Pedro Manuel Contreras Tafur', telefono:'3106396630', turno:'dia' },
+  { id:'moto-015', interno:'014', nombre:'Bladimir Padilla Gutierrez', telefono:'3180182714', turno:'dia' },
+  { id:'moto-016', interno:'015', nombre:'Jhon Jamer Vergel Calderon', telefono:'3143952971', turno:'noche' },
+  { id:'moto-017', interno:'016', nombre:'Luis Eduardo Suarez Duran', telefono:'3012674262', turno:'dia' },
+  { id:'moto-018', interno:'017', nombre:'José Ramiro Sánchez', telefono:'3046752824', turno:'dia' },
+  { id:'moto-019', interno:'018', nombre:'Deiner Alfonso Sanchez Meneses', telefono:'3104971792', turno:'noche' },
+  { id:'moto-020', interno:'018', nombre:'Walter Quintero Manosalva', telefono:'3205684406', turno:'dia' },
+  { id:'moto-021', interno:'019', nombre:'Diosemel Cáceres', telefono:'3208072213', turno:'dia' },
+  { id:'moto-022', interno:'020', nombre:'Franlkin Diaz Sanchez', telefono:'3148925620', turno:'dia' },
+  { id:'moto-023', interno:'021', nombre:'Carlos Daniel López Pedrozo', telefono:'3185052318', turno:'noche' },
+  { id:'moto-024', interno:'022', nombre:'Luis Antonio Vega Santiago', telefono:'3143026436', turno:'dia' },
+  { id:'moto-025', interno:'023', nombre:'Duban Andres Rodriguez Fuentes', telefono:'3187604830', turno:'dia' },
+  { id:'moto-026', interno:'024', nombre:'Rafael Rangel Lozano', telefono:'3219476678', turno:'dia' },
+  { id:'moto-027', interno:'025', nombre:'Eudin Emel Beleño Bossio', telefono:'3003264319', turno:'dia' },
+  { id:'moto-028', interno:'026', nombre:'Elber Emel Beleño Bossio', telefono:'3227483231', turno:'dia' },
+  { id:'moto-029', interno:'027', nombre:'Juan Carlos Cardenas Toro', telefono:'3044248354', turno:'dia' },
+  { id:'moto-030', interno:'028', nombre:'Luis Alfredo Contreras', telefono:'3187306487', turno:'dia' },
+  { id:'moto-031', interno:'029', nombre:'Jesus Alberto Urquijo Rincon', telefono:'3206225288', turno:'dia' },
+  { id:'moto-032', interno:'030', nombre:'Oscar Fernando Briceño Lobo', telefono:'3013536694', turno:'dia' },
+  { id:'moto-033', interno:'031', nombre:'Adrian Diaz Gonzales', telefono:'3103767055', turno:'noche' },
+  { id:'moto-034', interno:'032', nombre:'Julio Manzano', telefono:'3114137524', turno:'dia' },
+  { id:'moto-035', interno:'033', nombre:'Enrique Rincon Marin', telefono:'3118185102', turno:'dia' },
+  { id:'moto-036', interno:'034', nombre:'Orlando Gelvez Zuleta', telefono:'3135396223', turno:'dia' },
+  { id:'moto-037', interno:'035', nombre:'Luis Hernando Pedraza Duran', telefono:'3185603869', turno:'dia' },
+  { id:'moto-038', interno:'036', nombre:'Jolmar Samir Florez Polo', telefono:'3112412635', turno:'dia' },
+  { id:'moto-039', interno:'037', nombre:'Emel Enrique Cabarca Beleño', telefono:'3114149757', turno:'dia' },
+  { id:'moto-040', interno:'038', nombre:'Jose Leonel Gil Rizzo', telefono:'3215380878', turno:'dia' },
+  { id:'moto-041', interno:'039', nombre:'Luis Alfonso Perez Galvis', telefono:'3219987438', turno:'dia' },
+  { id:'moto-042', interno:'040', nombre:'Saul Ernovis Chaparro Quesada', telefono:'3102524779', turno:'dia' },
+  { id:'moto-043', interno:'041', nombre:'Jose Del Carmen Sanchez Meneses', telefono:'316555651', turno:'noche' },
+  { id:'moto-044', interno:'042', nombre:'Eduar Andres Navarro Araque', telefono:'3138692457', turno:'dia' },
+  { id:'moto-045', interno:'044', nombre:'Jose Billam Vargas Chavez', telefono:'3108217276', turno:'dia' },
+  { id:'moto-046', interno:'045', nombre:'Jhon Jairo Ramirez Gelvez', telefono:'3206725537', turno:'dia' },
+  { id:'moto-047', interno:'046', nombre:'Enoc Gonzalez Machado', telefono:'3226312700', turno:'dia' },
+  { id:'moto-048', interno:'047', nombre:'Carlos Samuel Boneth Santiago', telefono:'3159552690', turno:'dia' },
+  { id:'moto-049', interno:'048', nombre:'Jhon Carlos Sanchez Quintero', telefono:'3135224290', turno:'dia' },
+  { id:'moto-050', interno:'049', nombre:'Jorge Willam Santos Navarro', telefono:'3207437871', turno:'dia' },
+  { id:'moto-051', interno:'050', nombre:'Marlon Alberto Pallares Reyes', telefono:'3118725420', turno:'dia' },
+  { id:'moto-052', interno:'051', nombre:'Saul Sanchez Simanca', telefono:'3116684207', turno:'dia' },
+  { id:'moto-053', interno:'052', nombre:'Emel Beleño Bossio', telefono:'3118302708', turno:'dia' },
+  { id:'moto-054', interno:'053', nombre:'Alvaro Emiro Guerrero Amaya', telefono:'3142339693', turno:'dia' },
+  { id:'moto-055', interno:'054', nombre:'Jorge Anibal Ortegon Rua', telefono:'3135933448', turno:'dia' },
+  { id:'moto-056', interno:'055', nombre:'Jaider Sanchez Quintero', telefono:'3205141195', turno:'dia' },
+  { id:'moto-057', interno:'056', nombre:'Jamieth Noriega Castillo', telefono:'3144836015', turno:'dia' },
+  { id:'moto-058', interno:'057', nombre:'Anthony Javier Sanchez Rodriguez', telefono:'3102449635', turno:'dia' },
+  { id:'moto-059', interno:'058', nombre:'Jose William Garcia Manrique', telefono:'3135334207', turno:'dia' },
+  { id:'moto-060', interno:'059', nombre:'Yomar Sanguino Rangel', telefono:'3147551280', turno:'dia' },
+  { id:'moto-061', interno:'060', nombre:'Fernando Carvajal Padilla', telefono:'3143969573', turno:'dia' },
+  { id:'moto-062', interno:'061', nombre:'Carmelo Antonio Barrios Terán', telefono:'3114315947', turno:'dia' },
+  { id:'moto-063', interno:'062', nombre:'Hernan Celis Arguello', telefono:'3135805417', turno:'dia' },
+  { id:'moto-064', interno:'063', nombre:'Miguel Angel Sining Beleño', telefono:'3216094251', turno:'dia' },
+  { id:'moto-065', interno:'064', nombre:'Edwin Antonio Sarmiento Rincon', telefono:'3137779401', turno:'dia' },
+  { id:'moto-066', interno:'064', nombre:'Endry Jose Zerpa Gonzalez', telefono:'3147751948', turno:'noche' },
+  { id:'moto-067', interno:'065', nombre:'Elkin Dario Arguelles Rincon', telefono:'3105449299', turno:'dia' },
+  { id:'moto-068', interno:'066', nombre:'Visaid Guerrero Aguilar', telefono:'3145441321', turno:'dia' },
+  { id:'moto-069', interno:'067', nombre:'Edilberto Jose Angarita Sanjuan', telefono:'3173084115', turno:'dia' },
+  { id:'moto-070', interno:'068', nombre:'Luis Alfredo Contreras', telefono:'3144852435', turno:'dia' },
+  { id:'moto-071', interno:'069', nombre:'Manuel Alirio Guerrero Ortiz', telefono:'3202185047', turno:'dia' },
+  { id:'moto-072', interno:'070', nombre:'Yeiner Vega Camargo', telefono:'3208945248', turno:'dia' },
+  { id:'moto-073', interno:'071', nombre:'Gregorio Bohorquez Duque', telefono:'3102799758', turno:'dia' },
+  { id:'moto-074', interno:'072', nombre:'Leonardo Palomino Torrejano', telefono:'3114001298', turno:'dia' },
+  { id:'moto-075', interno:'073', nombre:'Eider Garcia Florez', telefono:'3114004647', turno:'dia' },
+  { id:'moto-076', interno:'074', nombre:'Nahum Moreno Gil', telefono:'3115705344', turno:'dia' },
+  { id:'moto-077', interno:'075', nombre:'Sergio Luis Amaris Hernández', telefono:'3145099713', turno:'dia' },
+  { id:'moto-078', interno:'076', nombre:'Deivis Castro Perez', telefono:'3226248194', turno:'dia' },
+  { id:'moto-079', interno:'077', nombre:'Richar Andres Diaz Carvajal', telefono:'3216798302', turno:'dia' },
+  { id:'moto-080', interno:'077', nombre:'Miguel Salvador Guerrero Amaya', telefono:'3207205725', turno:'dia' },
+  { id:'moto-081', interno:'078', nombre:'Luis Enrique Florez Solano', telefono:'3227929464', turno:'dia' },
+  { id:'moto-082', interno:'079', nombre:'Andres Camilo Balmaceda Pedraza', telefono:'3226085313', turno:'dia' },
+  { id:'moto-083', interno:'080', nombre:'Yeison Fabian Rios Rosado', telefono:'3045688030', turno:'dia' },
+  { id:'moto-084', interno:'080', nombre:'Ulises Rios Chinchilla', telefono:'3226720158', turno:'noche' },
+  { id:'moto-085', interno:'081', nombre:'Nestor Andres Martinez Regalado', telefono:'3163919683', turno:'dia' },
+  { id:'moto-086', interno:'082', nombre:'Andres Jose Cadena Solano', telefono:'3003958846', turno:'dia' },
+  { id:'moto-087', interno:'083', nombre:'Geiner Fabian Carvajal Padilla', telefono:'3107150938', turno:'dia' },
+  { id:'moto-088', interno:'084', nombre:'Deyver Pedroza Blanco', telefono:'3207369930', turno:'dia' },
+  { id:'moto-089', interno:'085', nombre:'Julio Cesar Peña Martinez', telefono:'3126887045', turno:'dia' },
+  { id:'moto-090', interno:'086', nombre:'Jhon Jairo Davila Beleño', telefono:'3142999027', turno:'dia' },
+  { id:'moto-091', interno:'087', nombre:'Jhon Carlos Uribe Contreras', telefono:'3215267452', turno:'dia' },
+  { id:'moto-092', interno:'088', nombre:'Jesus Antonio Morales Suarez', telefono:'3003898561', turno:'dia' },
+  { id:'moto-093', interno:'089', nombre:'Jose David Meneses Beleño', telefono:'3197670428', turno:'dia' },
+  { id:'moto-094', interno:'090', nombre:'Duber Enrique Guerrero Gonzalez', telefono:'3145157147', turno:'dia' },
+  { id:'moto-095', interno:'091', nombre:'Frayder Camacho Mejia', telefono:'3207437871', turno:'dia' },
+  { id:'moto-096', interno:'092', nombre:'Jader Pedraza Blanco', telefono:'3207377001', turno:'dia' },
+  { id:'moto-097', interno:'093', nombre:'Nelson Balmaceda Jimenez', telefono:'3106778908', turno:'noche' },
+  { id:'moto-098', interno:'094', nombre:'Gustavo Alberto Palomino Torrejano', telefono:'3124310873', turno:'dia' },
+  { id:'moto-099', interno:'095', nombre:'Jose Elain Ramirez Escobar', telefono:'3145757990', turno:'dia' },
+  { id:'moto-100', interno:'096', nombre:'Yesid Humberto Yepez De Avila', telefono:'3162316634', turno:'dia' },
+  { id:'moto-101', interno:'097', nombre:'Angie Lorena Lopez Viveros', telefono:'3216578251', turno:'dia' },
+  { id:'moto-102', interno:'098', nombre:'Miller Vargas Chavez', telefono:'3155126003', turno:'dia' },
+  { id:'moto-103', interno:'099', nombre:'Elias Navarro Araque', telefono:'3115758757', turno:'dia' },
+  { id:'moto-104', interno:'100', nombre:'Miguel Angel Navarro Rodriguez', telefono:'3209183049', turno:'dia' }
+];
+  </script>
+
+  <script>
+/* ============================================================
+   ZONA CARIBE · MÓDULO SERVICIOS · V10
+   Fuente entregada como .txt por solicitud del usuario.
+   El index lleva esta misma lógica embebida para evitar
+   problemas de MIME al cargar archivos .txt como JavaScript.
+   ============================================================ */
+
+(() => {
+  'use strict';
+
+  const moduleEl = document.getElementById('servicios-module');
+  const config = window.ZC_SERVICIOS_CONFIG;
+
+  if (!moduleEl || !config || !Array.isArray(config.hoteles)) return;
+
+  const hotels = config.hoteles;
+  const restaurants = Array.isArray(config.restaurantes) ? config.restaurantes : [];
+  const motocarros = Array.isArray(config.motocarros) ? config.motocarros : [];
+  const motocarroConfig = config.motocarroConfig || { horaInicioNoche: 19, horaFinNoche: 6, cantidadInicial: 5, cantidadMas: 5 };
+  if (!hotels.length) return;
+
+  const closeBtn = document.getElementById('services-close');
+  const homeView = document.getElementById('services-home');
+  const hotelsView = document.getElementById('services-hotels-panel');
+  const restaurantsView = document.getElementById('services-restaurants-panel');
+  const transportView = document.getElementById('services-transport-panel');
+  const categoryButtons = [...moduleEl.querySelectorAll('[data-service-category]')];
+  const backButtons = [...moduleEl.querySelectorAll('[data-services-back]')];
+
+  const tabsEl = document.getElementById('services-tabs');
+  const cardEl = document.getElementById('hotel-card');
+  const photoWrapEl = document.getElementById('hotel-photo-wrap');
+  const photoEl = document.getElementById('hotel-photo');
+  const photoIndexEl = document.getElementById('hotel-photo-index');
+  const nameEl = document.getElementById('hotel-name');
+  const phonesEl = document.getElementById('hotel-phones');
+  const addressEl = document.getElementById('hotel-address');
+
+  const restaurantNowEl = document.getElementById('restaurant-now');
+  const restaurantFiltersEl = document.getElementById('restaurant-filters');
+  const restaurantListEl = document.getElementById('restaurant-list');
+  const restaurantTreatsEl = document.getElementById('restaurant-treats-list');
+  const restaurantTreatsSection = document.getElementById('restaurant-treats');
+
+  const transportNowEl = document.getElementById('transport-now');
+  const transportListEl = document.getElementById('transport-list');
+  const transportMoreBtn = document.getElementById('transport-more');
+  const transportCountEl = document.getElementById('transport-count');
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const categoryMeta = {
+    hoteles: {
+      title: 'Hoteles',
+      color: '#1677c4',
+      rgb: '22,119,196'
+    },
+    restaurantes: {
+      title: 'Restaurantes',
+      color: '#28a10f',
+      rgb: '40,161,15'
+    },
+    transporte: {
+      title: 'Transporte',
+      color: '#d2510e',
+      rgb: '210,81,14'
+    }
+  };
+
+  const eventPalette = [
+    { hex: '#1677c4', rgb: '22,119,196' },
+    { hex: '#28a10f', rgb: '40,161,15' },
+    { hex: '#d2510e', rgb: '210,81,14' },
+    { hex: '#b81180', rgb: '184,17,128' }
+  ];
+
+  const mealLabels = {
+    desayuno: 'Desayuno',
+    almuerzo: 'Almuerzo',
+    cena: 'Cena',
+    reposteria: 'Repostería'
+  };
+
+  let isOpen = false;
+  let activeIndex = -1;
+  let swapToken = 0;
+  let currentView = 'home';
+  let restaurantFilter = 'auto';
+  let restaurantTimer = null;
+  let transportTimer = null;
+  let dayOrder = [];
+  let dayBatchStart = 0;
+
+  const iconPhone = `
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M6.7 10.7a15.9 15.9 0 0 0 6.6 6.6l2.1-2.1c.4-.4.9-.5 1.4-.3 1 .3 2 .5 3.1.5.6 0 1.1.5 1.1 1.1V20c0 .6-.5 1.1-1.1 1.1C10.4 21.1 2.9 13.6 2.9 4.1 2.9 3.5 3.4 3 4 3h3.5c.6 0 1.1.5 1.1 1.1 0 1.1.2 2.1.5 3.1.2.5.1 1-.3 1.4l-2.1 2.1Z" fill="currentColor"/>
+    </svg>`;
+
+  const iconPin = `
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 21s6-5.5 6-11a6 6 0 1 0-12 0c0 5.5 6 11 6 11Z"></path>
+      <circle cx="12" cy="10" r="2.2"></circle>
+    </svg>`;
+
+  const iconClock = `
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="8"></circle>
+      <path d="M12 8v4l3 2"></path>
+    </svg>`;
+
+  const iconWhatsApp = `
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M20 11.6a8 8 0 0 1-11.8 7l-4.2 1.1 1.1-4A8 8 0 1 1 20 11.6Z"></path>
+      <path d="M8.3 7.9c.3 2 2 4.4 4.8 5.7 1 .5 1.8.4 2.5-.4"></path>
+    </svg>`;
+
+  const iconBreakfast = `
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4 15h12a4 4 0 0 0 0-8H4v8Z"></path>
+      <path d="M4 18h14M18 9h1a2 2 0 0 1 0 4h-1"></path>
+    </svg>`;
+
+  const iconLunch = `
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="7"></circle>
+      <circle cx="12" cy="12" r="3.2"></circle>
+      <path d="M4 5v14M2.8 5v5M5.2 5v5M19 5v14M19 5c2 1.5 2.4 4.1 0 6"></path>
+    </svg>`;
+
+  const iconDinner = `
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4 15h16M6 15a6 6 0 0 1 12 0M12 7V5"></path>
+      <path d="M5 19h14"></path>
+    </svg>`;
+
+  const iconCake = `
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M5 11h14v8H5v-8ZM7 11V8h10v3"></path>
+      <path d="M9 8V5M15 8V5M9 5h.01M15 5h.01"></path>
+    </svg>`;
+
+
+  const iconMoto = `
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="6.5" cy="17" r="3"></circle>
+      <circle cx="17.5" cy="17" r="3"></circle>
+      <path d="M9.3 17h5.2l-2.2-5.2H9.2l-2.1 2.4M12.3 11.8l2.2-3.1h2.3M14.7 8.7l1.7 3.1h2.1M8.8 9.2h3.8"></path>
+    </svg>`;
+
+  const iconMore = `
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 5v14M5 12h14"></path>
+    </svg>`;
+
+  function normalizePhone(phone) {
+    return String(phone).replace(/[^0-9+]/g, '');
+  }
+
+  function getHotel(index) {
+    return hotels[Math.max(0, Math.min(index, hotels.length - 1))];
+  }
+
+  function setTheme(color = '#1677c4', rgb = '22,119,196') {
+    moduleEl.style.setProperty('--services-accent', color);
+    moduleEl.style.setProperty('--services-accent-rgb', rgb);
+  }
+
+  function setView(view) {
+    currentView = view;
+
+    homeView.hidden = view !== 'home';
+    hotelsView.hidden = view !== 'hoteles';
+    restaurantsView.hidden = view !== 'restaurantes';
+    transportView.hidden = view !== 'transporte';
+
+    [homeView, hotelsView, restaurantsView, transportView].forEach(panel => {
+      panel?.classList.remove('is-entering');
+    });
+
+    const currentPanel = view === 'home'
+      ? homeView
+      : view === 'hoteles'
+        ? hotelsView
+        : view === 'restaurantes'
+          ? restaurantsView
+          : transportView;
+
+    if (currentPanel && !reduceMotion) {
+      requestAnimationFrame(() => currentPanel.classList.add('is-entering'));
+    }
+  }
+
+  function showHome() {
+    activeIndex = -1;
+    cardEl.hidden = true;
+    setTheme('#1677c4', '22,119,196');
+    setView('home');
+    stopRestaurantTimer();
+    stopTransportTimer();
+  }
+
+  function openCategory(category) {
+    const meta = categoryMeta[category];
+    if (!meta) return;
+
+    setTheme(meta.color, meta.rgb);
+
+    if (category === 'hoteles') {
+      activeIndex = -1;
+      cardEl.hidden = true;
+      renderTabs();
+      setView('hoteles');
+      warmHotelImages();
+      stopRestaurantTimer();
+      window.setTimeout(() => {
+        tabsEl.querySelector('.services-tab')?.focus({ preventScroll: true });
+      }, reduceMotion ? 0 : 280);
+      return;
+    }
+
+    if (category === 'restaurantes') {
+      restaurantFilter = 'auto';
+      setView('restaurantes');
+      renderRestaurants();
+      startRestaurantTimer();
+      stopTransportTimer();
+      return;
+    }
+
+    if (category === 'transporte') {
+      stopRestaurantTimer();
+      setView('transporte');
+      renderTransport();
+      startTransportTimer();
+      return;
+    }
+  }
+
+  function createPhoneChip(phone) {
+    const link = document.createElement('a');
+    link.className = 'hotel-contact hotel-contact--phone';
+    link.href = `tel:${normalizePhone(phone)}`;
+    link.setAttribute('aria-label', `Llamar al ${phone}`);
+    link.innerHTML = `${iconPhone}<span>${phone}</span>`;
+    return link;
+  }
+
+  function renderTabs() {
+    tabsEl.replaceChildren();
+
+    hotels.forEach((hotel, index) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'services-tab';
+      button.dataset.hotelIndex = String(index);
+      button.style.setProperty('--hotel-accent', hotel.accent || '#1677c4');
+      button.setAttribute('role', 'tab');
+      button.setAttribute('aria-selected', index === activeIndex ? 'true' : 'false');
+      button.tabIndex = index === activeIndex || (activeIndex < 0 && index === 0) ? 0 : -1;
+
+      if (index === activeIndex) button.classList.add('is-active');
+
+      button.innerHTML = `
+        <span class="services-tab__number">${String(index + 1).padStart(2, '0')}</span>
+        <span class="services-tab__label">${hotel.nombre}</span>
+        <span class="services-tab__dot" aria-hidden="true"></span>`;
+
+      button.addEventListener('click', () => selectHotel(index));
+      button.addEventListener('keydown', event => handleTabKeydown(event, index));
+      tabsEl.appendChild(button);
+    });
+  }
+
+  function handleTabKeydown(event, index) {
+    if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) return;
+    event.preventDefault();
+
+    let next = index;
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') next = (index + 1) % hotels.length;
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') next = (index - 1 + hotels.length) % hotels.length;
+    if (event.key === 'Home') next = 0;
+    if (event.key === 'End') next = hotels.length - 1;
+
+    tabsEl.querySelector(`[data-hotel-index="${next}"]`)?.focus();
+  }
+
+  function renderContacts(hotel) {
+    phonesEl.replaceChildren();
+    (hotel.telefonos || []).forEach(phone => phonesEl.appendChild(createPhoneChip(phone)));
+
+    addressEl.innerHTML = `
+      <span class="hotel-address__icon">${iconPin}</span>
+      <span>${hotel.direccion || 'Dirección no disponible'}</span>`;
+  }
+
+  function animateSwap() {
+    if (reduceMotion || !cardEl) return;
+
+    cardEl.getAnimations().forEach(animation => animation.cancel());
+    photoWrapEl?.getAnimations().forEach(animation => animation.cancel());
+
+    cardEl.animate(
+      [
+        { opacity: .3, transform: 'translateY(14px) scale(.985)' },
+        { opacity: 1, transform: 'translateY(0) scale(1)' }
+      ],
+      {
+        duration: 520,
+        easing: 'cubic-bezier(.16,1,.3,1)',
+        fill: 'both'
+      }
+    );
+
+    photoWrapEl?.animate(
+      [
+        { opacity: .35, transform: 'scale(.97)' },
+        { opacity: 1, transform: 'scale(1)' }
+      ],
+      {
+        duration: 620,
+        easing: 'cubic-bezier(.16,1,.3,1)',
+        fill: 'both'
+      }
+    );
+  }
+
+
+  const hotelImageCache = new Map();
+
+  function warmHotelImages() {
+    hotels.forEach((hotel, index) => {
+      if (!hotel?.foto || hotelImageCache.has(hotel.foto)) return;
+      const preload = new Image();
+      preload.decoding = 'async';
+      preload.onload = () => hotelImageCache.set(hotel.foto, preload);
+      preload.onerror = () => hotelImageCache.delete(hotel.foto);
+      const start = () => { preload.src = hotel.foto; };
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(start, { timeout: 700 + (index * 90) });
+      } else {
+        window.setTimeout(start, 70 * index);
+      }
+    });
+  }
+
+  function selectHotel(index, { animate = true } = {}) {
+    activeIndex = index;
+    const hotel = getHotel(activeIndex);
+    const token = ++swapToken;
+
+    setTheme(hotel.accent || '#1677c4', hotel.tint || '22,119,196');
+    renderTabs();
+
+    cardEl.hidden = false;
+    nameEl.textContent = hotel.nombre;
+    photoIndexEl.textContent = `${String(activeIndex + 1).padStart(2, '0')} · Hotel`;
+    renderContacts(hotel);
+
+    photoEl.alt = `Fachada de ${hotel.nombre}`;
+    photoEl.fetchPriority = 'high';
+    photoEl.classList.add('is-loading');
+
+    const finish = () => {
+      if (token !== swapToken) return;
+      photoEl.classList.remove('is-loading');
+      photoWrapEl?.classList.remove('has-image-error');
+      if (animate) animateSwap();
+    };
+
+    const fail = () => {
+      if (token !== swapToken) return;
+      photoEl.classList.remove('is-loading');
+      photoWrapEl?.classList.add('has-image-error');
+      photoEl.alt = `No fue posible cargar la fachada de ${hotel.nombre}`;
+    };
+
+    photoEl.onload = finish;
+    photoEl.onerror = fail;
+    photoEl.src = hotel.foto;
+
+    if (photoEl.complete) {
+      if (photoEl.naturalWidth > 0) finish();
+      else fail();
+    }
+  }
+
+  /* ============================================================
+     RESTAURANTES
+     ============================================================ */
+
+  function minutesFromTime(value) {
+    if (!value) return null;
+    const [h, m] = String(value).split(':').map(Number);
+    if (!Number.isFinite(h)) return null;
+    return (h * 60) + (m || 0);
+  }
+
+  function hasRestaurantSchedule(restaurant) {
+    return Boolean(restaurant?.horario?.abre && restaurant?.horario?.cierra);
+  }
+
+  function getBogotaClock() {
+    const parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'America/Bogota',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    }).formatToParts(new Date());
+
+    let hour = Number(parts.find(part => part.type === 'hour')?.value || 0);
+    const minute = Number(parts.find(part => part.type === 'minute')?.value || 0);
+    if (hour === 24) hour = 0;
+
+    return {
+      hour,
+      minute,
+      total: (hour * 60) + minute
+    };
+  }
+
+  function currentMeal(totalMinutes) {
+    if (totalMinutes < 11 * 60) return 'desayuno';
+    if (totalMinutes < 17 * 60) return 'almuerzo';
+    return 'cena';
+  }
+
+  function formatTime24(value) {
+    if (!value) return 'Por confirmar';
+    const [h, m] = String(value).split(':').map(Number);
+    if (!Number.isFinite(h)) return 'Por confirmar';
+    const suffix = h >= 12 ? 'p. m.' : 'a. m.';
+    const hour = h % 12 || 12;
+    return `${hour}:${String(m || 0).padStart(2, '0')} ${suffix}`;
+  }
+
+  function isRestaurantOpen(restaurant, totalMinutes) {
+    if (!hasRestaurantSchedule(restaurant)) return null;
+    const start = minutesFromTime(restaurant.horario.abre);
+    const end = minutesFromTime(restaurant.horario.cierra);
+    return totalMinutes >= start && totalMinutes < end;
+  }
+
+  function restaurantTimingText(restaurant, totalMinutes) {
+    if (!hasRestaurantSchedule(restaurant)) return 'Horario por confirmar';
+
+    const start = minutesFromTime(restaurant.horario.abre);
+    const end = minutesFromTime(restaurant.horario.cierra);
+
+    if (totalMinutes >= start && totalMinutes < end) {
+      return `Cierra ${formatTime24(restaurant.horario.cierra)}`;
+    }
+
+    if (totalMinutes < start) {
+      return `Abre ${formatTime24(restaurant.horario.abre)}`;
+    }
+
+    return `Abre mañana ${formatTime24(restaurant.horario.abre)}`;
+  }
+
+  function normalizeWhatsAppNumber(value) {
+    let digits = String(value || '').replace(/\D+/g, '');
+    if (digits.length === 10 && digits.startsWith('3')) digits = `57${digits}`;
+    return digits;
+  }
+
+  function mealIcon(service) {
+    if (service === 'desayuno') return iconBreakfast;
+    if (service === 'almuerzo') return iconLunch;
+    if (service === 'cena') return iconDinner;
+    return iconCake;
+  }
+
+  function restaurantAccent(index) {
+    return eventPalette[index % eventPalette.length];
+  }
+
+  function restaurantRank(restaurant, meal, totalMinutes) {
+    const openState = isRestaurantOpen(restaurant, totalMinutes);
+    const supportsMeal = restaurant.servicios.includes(meal) ? 0 : 1;
+
+    if (openState === null) {
+      return (supportsMeal * 100000) + 20000;
+    }
+
+    const start = minutesFromTime(restaurant.horario.abre);
+    const end = minutesFromTime(restaurant.horario.cierra);
+    const openRank = openState ? 0 : 1;
+    const remaining = openState
+      ? Math.max(0, end - totalMinutes)
+      : Math.abs(start - totalMinutes);
+
+    return (supportsMeal * 100000) + (openRank * 10000) + remaining;
+  }
+
+  function buildMealChip(service, activeMeal) {
+    const chip = document.createElement('span');
+    chip.className = 'restaurant-meal-chip';
+    if (service === activeMeal) chip.classList.add('is-current');
+    chip.innerHTML = `${mealIcon(service)}<span>${mealLabels[service] || service}</span>`;
+    return chip;
+  }
+
+  function buildRestaurantCard(restaurant, index, activeMeal, totalMinutes, { compact = false } = {}) {
+    const accent = restaurantAccent(index);
+    const openState = isRestaurantOpen(restaurant, totalMinutes);
+    const card = document.createElement('article');
+    card.className = `restaurant-card${compact ? ' restaurant-card--compact' : ''}`;
+    card.style.setProperty('--restaurant-accent', accent.hex);
+    card.style.setProperty('--restaurant-accent-rgb', accent.rgb);
+
+    const heading = document.createElement('div');
+    heading.className = 'restaurant-card__head';
+    heading.innerHTML = `
+      <div class="restaurant-card__title-wrap">
+        <span class="restaurant-card__index">${String(index + 1).padStart(2, '0')}</span>
+        <h4 class="restaurant-card__name">${restaurant.nombre}</h4>
+      </div>
+      <span class="restaurant-status ${openState === true ? 'is-open' : openState === false ? 'is-closed' : ''}">
+        <span class="restaurant-status__dot" aria-hidden="true"></span>
+        ${openState === true ? 'Abierto' : openState === false ? 'Cerrado' : 'Horario por confirmar'}
+      </span>`;
+
+    const schedule = document.createElement('div');
+    schedule.className = 'restaurant-card__schedule';
+    schedule.innerHTML = hasRestaurantSchedule(restaurant)
+      ? `
+        <span class="restaurant-info-chip">${iconClock}<span>${formatTime24(restaurant.horario.abre)} – ${formatTime24(restaurant.horario.cierra)}</span></span>
+        <span class="restaurant-info-chip restaurant-info-chip--state">${restaurantTimingText(restaurant, totalMinutes)}</span>`
+      : `
+        <span class="restaurant-info-chip">${iconClock}<span>Horario por confirmar</span></span>`;
+
+    const meals = document.createElement('div');
+    meals.className = 'restaurant-card__meals';
+    restaurant.servicios.forEach(service => meals.appendChild(buildMealChip(service, activeMeal)));
+
+    const details = document.createElement('div');
+    details.className = 'restaurant-card__details';
+
+    if (restaurant.direccion) {
+      const address = document.createElement('span');
+      address.className = 'restaurant-detail';
+      address.innerHTML = `${iconPin}<span>${restaurant.direccion}</span>`;
+      details.appendChild(address);
+    }
+
+    if (restaurant.celular) {
+      const phone = document.createElement('a');
+      phone.className = 'restaurant-detail restaurant-detail--link';
+      phone.href = `tel:${normalizePhone(restaurant.celular)}`;
+      phone.innerHTML = `${iconPhone}<span>${restaurant.celular}</span>`;
+      details.appendChild(phone);
+    }
+
+    if (restaurant.whatsappUsuario) {
+      const wa = document.createElement('span');
+      wa.className = 'restaurant-detail restaurant-detail--whatsapp';
+      wa.innerHTML = `${iconWhatsApp}<span>@${restaurant.whatsappUsuario}</span>`;
+      details.appendChild(wa);
+    }
+
+    if (restaurant.whatsapp) {
+      const wa = document.createElement('a');
+      wa.className = 'restaurant-detail restaurant-detail--link restaurant-detail--whatsapp';
+      wa.href = `https://wa.me/${normalizeWhatsAppNumber(restaurant.whatsapp)}`;
+      wa.target = '_blank';
+      wa.rel = 'noopener noreferrer';
+      wa.innerHTML = `${iconWhatsApp}<span>WhatsApp ${restaurant.whatsapp}</span>`;
+      details.appendChild(wa);
+    }
+
+    card.append(heading, schedule, meals);
+    if (details.children.length) card.appendChild(details);
+
+    if (!reduceMotion) {
+      card.style.animationDelay = `${Math.min(index * 55, 420)}ms`;
+    }
+
+    return card;
+  }
+
+  function buildRestaurantFilters(activeMeal) {
+    if (!restaurantFiltersEl) return;
+
+    const filters = [
+      { id: 'auto', label: `Ahora · ${mealLabels[activeMeal]}`, icon: mealIcon(activeMeal) },
+      { id: 'desayuno', label: 'Desayuno', icon: iconBreakfast },
+      { id: 'almuerzo', label: 'Almuerzo', icon: iconLunch },
+      { id: 'cena', label: 'Cena', icon: iconDinner }
+    ];
+
+    restaurantFiltersEl.replaceChildren();
+
+    filters.forEach(filter => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'restaurant-filter';
+      if (restaurantFilter === filter.id) button.classList.add('is-active');
+      button.setAttribute('aria-pressed', restaurantFilter === filter.id ? 'true' : 'false');
+      button.innerHTML = `${filter.icon}<span>${filter.label}</span>`;
+      button.addEventListener('click', () => {
+        restaurantFilter = filter.id;
+        renderRestaurants();
+      });
+      restaurantFiltersEl.appendChild(button);
+    });
+  }
+
+  function renderRestaurantNow(activeMeal, totalMinutes, visibleCount) {
+    if (!restaurantNowEl) return;
+
+    const clock = getBogotaClock();
+    const hour12 = clock.hour % 12 || 12;
+    const suffix = clock.hour >= 12 ? 'p. m.' : 'a. m.';
+
+    restaurantNowEl.innerHTML = `
+      <span class="restaurant-now__icon">${mealIcon(activeMeal)}</span>
+      <span class="restaurant-now__copy">
+        <strong>${mealLabels[activeMeal]}</strong>
+        <span>${hour12}:${String(clock.minute).padStart(2, '0')} ${suffix} · ${visibleCount} opciones</span>
+      </span>
+      <span class="restaurant-now__pulse" aria-hidden="true"></span>`;
+  }
+
+  function renderRestaurants() {
+    if (!restaurantsView || !restaurants.length) return;
+
+    const clock = getBogotaClock();
+    const autoMeal = currentMeal(clock.total);
+    const activeMeal = restaurantFilter === 'auto' ? autoMeal : restaurantFilter;
+
+    buildRestaurantFilters(autoMeal);
+
+    const mainRestaurants = restaurants
+      .filter(restaurant => restaurant.servicios.includes(activeMeal))
+      .sort((a, b) => restaurantRank(a, activeMeal, clock.total) - restaurantRank(b, activeMeal, clock.total));
+
+    renderRestaurantNow(activeMeal, clock.total, mainRestaurants.length);
+
+    restaurantListEl.replaceChildren();
+
+    mainRestaurants.forEach((restaurant, index) => {
+      restaurantListEl.appendChild(buildRestaurantCard(restaurant, index, activeMeal, clock.total));
+    });
+
+    if (!mainRestaurants.length) {
+      const empty = document.createElement('div');
+      empty.className = 'restaurant-empty';
+      empty.textContent = `No hay opciones registradas para ${mealLabels[activeMeal].toLowerCase()}.`;
+      restaurantListEl.appendChild(empty);
+    }
+
+    const treats = restaurants
+      .filter(restaurant => restaurant.servicios.includes('reposteria'))
+      .sort((a, b) => {
+        const stateA = isRestaurantOpen(a, clock.total);
+        const stateB = isRestaurantOpen(b, clock.total);
+        const rankA = stateA === true ? 0 : stateA === false ? 1 : 2;
+        const rankB = stateB === true ? 0 : stateB === false ? 1 : 2;
+        return rankA - rankB || a.nombre.localeCompare(b.nombre, 'es');
+      });
+
+    restaurantTreatsEl.replaceChildren();
+    treats.forEach((restaurant, index) => {
+      restaurantTreatsEl.appendChild(buildRestaurantCard(restaurant, index, 'reposteria', clock.total, { compact: true }));
+    });
+
+    if (restaurantTreatsSection) {
+      restaurantTreatsSection.hidden = treats.length === 0;
+    }
+  }
+
+  function startRestaurantTimer() {
+    stopRestaurantTimer();
+    restaurantTimer = window.setInterval(() => {
+      if (isOpen && currentView === 'restaurantes') renderRestaurants();
+    }, 60000);
+  }
+
+  function stopRestaurantTimer() {
+    if (!restaurantTimer) return;
+    window.clearInterval(restaurantTimer);
+    restaurantTimer = null;
+  }
+
+  /* ============================================================
+     TRANSPORTE · MOTOCARROS
+     Día: muestra una selección aleatoria sin repetir.
+     Noche: desde las 7:00 p. m. muestra solo el turno nocturno.
+     ============================================================ */
+
+  function shuffleCopy(items) {
+    const copy = [...items];
+    for (let i = copy.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  }
+
+  function initializeTransportOrder() {
+    if (dayOrder.length) return;
+    dayOrder = shuffleCopy(motocarros.filter(driver => driver.turno === 'dia'));
+    dayBatchStart = 0;
+  }
+
+  function getTransportShift(clock = getBogotaClock()) {
+    const nightStart = (Number(motocarroConfig.horaInicioNoche) || 19) * 60;
+    const nightEnd = (Number(motocarroConfig.horaFinNoche) || 6) * 60;
+    const isNight = clock.total >= nightStart || clock.total < nightEnd;
+    return isNight ? 'noche' : 'dia';
+  }
+
+  function transportAccent(index) {
+    return eventPalette[index % eventPalette.length];
+  }
+
+  function formatTransportClock(clock) {
+    const hour12 = clock.hour % 12 || 12;
+    const suffix = clock.hour >= 12 ? 'p. m.' : 'a. m.';
+    return `${hour12}:${String(clock.minute).padStart(2, '0')} ${suffix}`;
+  }
+
+  function buildDriverCard(driver, index, shift) {
+    const accent = transportAccent(index);
+    const card = document.createElement('article');
+    card.className = 'transport-card';
+    card.style.setProperty('--transport-accent', accent.hex);
+    card.style.setProperty('--transport-accent-rgb', accent.rgb);
+
+    const initials = driver.nombre
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map(part => part.charAt(0))
+      .join('');
+
+    const phone = normalizePhone(driver.telefono);
+
+    card.innerHTML = `
+      <div class="transport-card__avatar" aria-hidden="true">
+        <span>${initials}</span>
+        <span class="transport-card__moto">${iconMoto}</span>
+      </div>
+      <div class="transport-card__body">
+        <div class="transport-card__top">
+          <div>
+            <span class="transport-card__internal">No. ${driver.interno}</span>
+            <h4 class="transport-card__name">${driver.nombre}</h4>
+          </div>
+          <span class="transport-card__shift transport-card__shift--${shift}">${shift === 'noche' ? 'Noche' : 'Día'}</span>
+        </div>
+        <a class="transport-card__phone" href="tel:${phone}" aria-label="Llamar a ${driver.nombre}">
+          ${iconPhone}<span>${driver.telefono}</span><strong>Llamar</strong>
+        </a>
+      </div>`;
+
+    if (!reduceMotion) {
+      card.style.animationDelay = `${Math.min(index * 42, 360)}ms`;
+    }
+
+    return card;
+  }
+
+  function renderTransportNow(shift, clock, visible, total) {
+    if (!transportNowEl) return;
+
+    const night = shift === 'noche';
+    transportNowEl.className = `transport-now transport-now--${shift}`;
+    transportNowEl.innerHTML = `
+      <span class="transport-now__icon">${iconMoto}</span>
+      <span class="transport-now__copy">
+        <span class="transport-now__eyebrow">${night ? 'Turno nocturno' : 'Turno diurno'}</span>
+        <strong>${night ? 'Motocarros disponibles esta noche' : 'Selección aleatoria de motocarros'}</strong>
+        <span>${formatTransportClock(clock)} · ${night ? `${total} contactos del turno` : `${visible} mostrados`}</span>
+      </span>
+      <span class="transport-now__pulse" aria-hidden="true"></span>`;
+  }
+
+  function renderTransport() {
+    if (!transportView || !transportListEl || !motocarros.length) return;
+
+    initializeTransportOrder();
+
+    const clock = getBogotaClock();
+    const shift = getTransportShift(clock);
+    const nightDrivers = motocarros.filter(driver => driver.turno === 'noche');
+    const dayDrivers = dayOrder;
+
+    const batchSize = Math.max(1, Number(motocarroConfig.cantidadInicial) || 5);
+    const visibleDrivers = shift === 'noche'
+      ? nightDrivers
+      : dayDrivers.slice(dayBatchStart, dayBatchStart + batchSize);
+
+    renderTransportNow(
+      shift,
+      clock,
+      visibleDrivers.length,
+      shift === 'noche' ? nightDrivers.length : dayDrivers.length
+    );
+
+    transportListEl.replaceChildren();
+    visibleDrivers.forEach((driver, index) => {
+      transportListEl.appendChild(buildDriverCard(driver, index, shift));
+    });
+
+    if (transportCountEl) {
+      transportCountEl.textContent = shift === 'noche'
+        ? `${nightDrivers.length} conductores nocturnos`
+        : `${visibleDrivers.length} contactos · selección sin repetir`;
+    }
+
+    if (transportMoreBtn) {
+      const nextStart = dayBatchStart + visibleDrivers.length;
+      const hasMore = shift === 'dia' && nextStart < dayDrivers.length;
+      transportMoreBtn.hidden = !hasMore;
+      if (hasMore) {
+        const remaining = dayDrivers.length - nextStart;
+        const batch = Math.min(Number(motocarroConfig.cantidadMas) || 5, remaining);
+        transportMoreBtn.innerHTML = `${iconMore}<span>Ver otros ${batch}</span>`;
+      }
+    }
+  }
+
+  function showMoreDrivers() {
+    const clock = getBogotaClock();
+    if (getTransportShift(clock) !== 'dia') {
+      renderTransport();
+      return;
+    }
+
+    const amount = Math.max(1, Number(motocarroConfig.cantidadMas) || 5);
+    const nextStart = dayBatchStart + Math.max(1, Number(motocarroConfig.cantidadInicial) || 5);
+
+    if (nextStart >= dayOrder.length) {
+      transportMoreBtn.hidden = true;
+      return;
+    }
+
+    dayBatchStart = nextStart;
+    renderTransport();
+  }
+
+  function startTransportTimer() {
+    stopTransportTimer();
+    transportTimer = window.setInterval(() => {
+      if (isOpen && currentView === 'transporte') renderTransport();
+    }, 60000);
+  }
+
+  function stopTransportTimer() {
+    if (!transportTimer) return;
+    window.clearInterval(transportTimer);
+    transportTimer = null;
+  }
+
+  transportMoreBtn?.addEventListener('click', showMoreDrivers);
+
+  function openServices() {
+    if (isOpen) {
+      showHome();
+      return;
+    }
+
+    isOpen = true;
+    moduleEl.classList.add('is-active');
+    moduleEl.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('zc-services-open');
+    showHome();
+
+    window.setTimeout(() => {
+      categoryButtons[0]?.focus({ preventScroll: true });
+    }, reduceMotion ? 0 : 280);
+  }
+
+  function closeServices() {
+    if (!isOpen) return;
+    isOpen = false;
+    moduleEl.classList.remove('is-active');
+    moduleEl.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('zc-services-open');
+    stopRestaurantTimer();
+    stopTransportTimer();
+    showHome();
+  }
+
+  categoryButtons.forEach(button => {
+    button.addEventListener('click', () => openCategory(button.dataset.serviceCategory));
+  });
+
+  backButtons.forEach(button => {
+    button.addEventListener('click', showHome);
+  });
+
+  document.addEventListener('zc:menu:navigate', event => {
+    const target = event.detail?.module;
+    if (target === 'servicios') openServices();
+    else closeServices();
+  });
+
+  moduleEl.addEventListener('zc:module:activate', openServices);
+
+  closeBtn?.addEventListener('click', () => {
+    const home = document.querySelector('.zc-menu__item[data-menu-target="inicio"]');
+    if (home) home.click();
+    else closeServices();
+  });
+
+  moduleEl.addEventListener('keydown', event => {
+    if (event.key !== 'Escape') return;
+
+    if (currentView !== 'home') {
+      showHome();
+    } else {
+      closeServices();
+    }
+  });
+
+  document.addEventListener('visibilitychange', () => {
+    if (!isOpen) return;
+    if (document.hidden) {
+      stopRestaurantTimer();
+      stopTransportTimer();
+      return;
+    }
+    if (currentView === 'restaurantes') {
+      renderRestaurants();
+      startRestaurantTimer();
+    } else if (currentView === 'transporte') {
+      renderTransport();
+      startTransportTimer();
+    }
+  });
+
+  renderTabs();
+  showHome();
+})();
+  </script>
+
+  <script>
+    "use strict";
+
+    /* Altura real del viewport: evita saltos por las barras del navegador móvil. */
+    function setViewportHeight(){
+      document.documentElement.style.setProperty("--vh", `${window.innerHeight * 0.01}px`);
+    }
+
+    setViewportHeight();
+    window.addEventListener("resize", setViewportHeight, {passive:true});
+    window.addEventListener("orientationchange", ()=>window.setTimeout(setViewportHeight,120), {passive:true});
+
+    /*
+      Efectos inferiores. Se generan desde JS para no llenar el HTML con decenas
+      de nodos manuales. El generador es determinista para que la composición
+      mantenga el mismo carácter al recargar.
+    */
+    (function buildColorField(){
+      const field = document.getElementById("hero-color-field");
+      if(!field) return;
+
+      const colors = [
+        "var(--event-blue)",
+        "var(--event-green)",
+        "var(--event-orange)",
+        "var(--event-magenta)"
+      ];
+
+      let seed = 271828;
+      const rnd = ()=>{
+        seed = (seed * 1664525 + 1013904223) >>> 0;
+        return seed / 4294967296;
+      };
+
+      const lowMemory = typeof navigator.deviceMemory === "number" && navigator.deviceMemory <= 2;
+      const particleCount = lowMemory ? 10 : (window.innerWidth <= 480 ? 18 : 26);
+      const orbCount = lowMemory ? 3 : (window.innerWidth <= 480 ? 5 : 7);
+      const threadCount = lowMemory ? 3 : (window.innerWidth <= 480 ? 5 : 7);
+
+      const frag = document.createDocumentFragment();
+
+      for(let i=0;i<particleCount;i++){
+        const p = document.createElement("i");
+        p.className = "color-particle";
+        p.style.setProperty("--x", `${3 + rnd()*94}%`);
+        p.style.setProperty("--size", `${2.2 + rnd()*4.8}px`);
+        p.style.setProperty("--rise", `${95 + rnd()*150}px`);
+        p.style.setProperty("--drift", `${-32 + rnd()*64}px`);
+        p.style.setProperty("--dur", `${6.2 + rnd()*7.2}s`);
+        p.style.setProperty("--delay", `${-rnd()*12}s`);
+        p.style.setProperty("--color", colors[i % colors.length]);
+        frag.appendChild(p);
+      }
+
+      for(let i=0;i<orbCount;i++){
+        const o = document.createElement("b");
+        o.className = "color-orb";
+        o.style.setProperty("--x", `${4 + rnd()*90}%`);
+        o.style.setProperty("--size", `${13 + rnd()*25}px`);
+        o.style.setProperty("--dur", `${8 + rnd()*7}s`);
+        o.style.setProperty("--delay", `${-rnd()*10}s`);
+        o.style.setProperty("--color", colors[(i+1) % colors.length]);
+        frag.appendChild(o);
+      }
+
+      for(let i=0;i<threadCount;i++){
+        const t = document.createElement("em");
+        t.className = "color-thread";
+        t.style.setProperty("--x", `${5 + rnd()*90}%`);
+        t.style.setProperty("--h", `${48 + rnd()*72}px`);
+        t.style.setProperty("--dur", `${7 + rnd()*6}s`);
+        t.style.setProperty("--delay", `${-rnd()*9}s`);
+        t.style.setProperty("--color", colors[(i+2) % colors.length]);
+        frag.appendChild(t);
+      }
+
+      field.appendChild(frag);
+    })();
+
+    const EVENT_DATE = "2026-10-01T08:00:00-05:00";
+
+    const daysEl = document.getElementById("countdown-days");
+    const hoursEl = document.getElementById("countdown-hours");
+    const minutesEl = document.getElementById("countdown-minutes");
+    const secondsEl = document.getElementById("countdown-seconds");
+    const dateLabelEl = document.getElementById("countdown-date-label");
+    const statusEl = document.getElementById("countdown-status");
+
+    const target = new Date(EVENT_DATE);
+    let countdownTimer = null;
+    let previousSecond = null;
+
+    function pad2(n){
+      return String(n).padStart(2,"0");
+    }
+
+    function formatEventDate(){
+      if(Number.isNaN(target.getTime())){
+        dateLabelEl.textContent = "";
+        return;
+      }
+
+      const weekday = new Intl.DateTimeFormat("es-CO",{weekday:"long"}).format(target);
+      const datePart = new Intl.DateTimeFormat("es-CO",{
+        day:"numeric",
+        month:"long",
+        year:"numeric"
+      }).format(target);
+      const timePart = new Intl.DateTimeFormat("es-CO",{
+        hour:"numeric",
+        minute:"2-digit",
+        hour12:true
+      }).format(target);
+
+      dateLabelEl.textContent = `${weekday}, ${datePart}, ${timePart}`;
+    }
+
+    function animateTick(){
+      [daysEl,hoursEl,minutesEl,secondsEl].forEach(el=>el.classList.remove("tick"));
+      requestAnimationFrame(()=>{
+        secondsEl.classList.add("tick");
+        window.setTimeout(()=>secondsEl.classList.remove("tick"),180);
+      });
+    }
+
+    function updateCountdown(){
+      const diff = target.getTime() - Date.now();
+
+      if(Number.isNaN(diff)){
+        statusEl.textContent = "Configura una fecha válida en EVENT_DATE.";
+        return;
+      }
+
+      if(diff <= 0){
+        daysEl.textContent = "00";
+        hoursEl.textContent = "00";
+        minutesEl.textContent = "00";
+        secondsEl.textContent = "00";
+        statusEl.textContent = "¡El encuentro ya comenzó!";
+        if(countdownTimer){
+          clearInterval(countdownTimer);
+          countdownTimer = null;
+        }
+        return;
+      }
+
+      const totalSeconds = Math.floor(diff / 1000);
+      const days = Math.floor(totalSeconds / 86400);
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      daysEl.textContent = days < 100 ? pad2(days) : String(days);
+      hoursEl.textContent = pad2(hours);
+      minutesEl.textContent = pad2(minutes);
+      secondsEl.textContent = pad2(seconds);
+
+      if(previousSecond !== seconds){
+        animateTick();
+        previousSecond = seconds;
+      }
+
+      statusEl.textContent = "";
+    }
+
+    function startCountdownTimer(){
+      if(countdownTimer || target.getTime() <= Date.now()) return;
+      countdownTimer = window.setInterval(updateCountdown,1000);
+    }
+
+    function stopCountdownTimer(){
+      if(!countdownTimer) return;
+      window.clearInterval(countdownTimer);
+      countdownTimer = null;
+    }
+
+    function syncPageActivity(){
+      document.documentElement.classList.toggle("is-page-hidden",document.hidden);
+      if(document.hidden){
+        stopCountdownTimer();
+      }else{
+        updateCountdown();
+        startCountdownTimer();
+      }
+    }
+
+    formatEventDate();
+    updateCountdown();
+    startCountdownTimer();
+    document.addEventListener("visibilitychange",syncPageActivity);
+    syncPageActivity();
+
+    /* Cache offline sin bloquear el primer render. */
+    if("serviceWorker" in navigator){
+      window.addEventListener("load",()=>{
+        const register=()=>navigator.serviceWorker.register("./sw.js?v=14",{updateViaCache:"none"}).then(reg=>reg.update()).catch(()=>{});
+        if("requestIdleCallback" in window){
+          requestIdleCallback(register,{timeout:1800});
+        }else{
+          window.setTimeout(register,600);
+        }
+      },{once:true});
+    }
+  </script>
+</body>
+</html>
